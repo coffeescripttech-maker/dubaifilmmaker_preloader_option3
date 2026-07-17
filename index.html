@@ -70,10 +70,10 @@
 
     <meta property="og:locale" content="en_US" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content=" Homepage" />
+    <meta property="og:title" content="Homepage" />
     <meta property="og:site_name" content="Poster" />
     <meta property="og:url" content="https://posterco.tv" />
-    <meta name="twitter:title" content=" Homepage" />
+    <meta name="twitter:title" content="Homepage" />
     <meta name="twitter:card" content="summary_large_image" />
 
     <meta name="description" content="" />
@@ -191,6 +191,8 @@
         /* Show arrows on desktop like mobile */
         .box--home__buttons-mobile {
           display: flex !important;
+          flex-direction: row !important;
+          align-items: center !important;
           opacity: 1 !important;
           pointer-events: auto !important;
           position: relative !important;
@@ -245,11 +247,22 @@
       /* Arrow buttons styling - Mobile only */
       .box--home__buttons-mobile {
         display: flex;
-        gap: 0.75rem;
-        align-items: center;
-        justify-content: space-between;
-        margin-top: 1rem;
-        padding: 0 0.75rem;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 5px;
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.6s ease;
+        transition-delay: 0.2s;
+        z-index: 2;
+      }
+
+      .intro-ended .box--home__buttons-mobile {
+        opacity: 1;
+        pointer-events: auto;
       }
 
       .box--home__buttons-mobile .mobile-link {
@@ -276,9 +289,10 @@
 
       .box--home__buttons-mobile .arrow-prev,
       .box--home__buttons-mobile .arrow-next {
-        width: 36px;
-        height: 36px;
+        width: 38px;
+        height: 38px;
         border: 1px solid #fff;
+        border-radius: 50%;
         background: transparent;
         color: #fff;
         cursor: pointer;
@@ -286,6 +300,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        background-clip: padding-box;
         transition: all 0.3s ease;
       }
 
@@ -494,6 +509,47 @@
       .bloc-intro.lottie-ended {
         background: transparent !important;
       }
+
+      /* ── FASTER MENU ANIMATION ──
+         Override build.min.css 0.4s animation with a snappier 0.15s */
+      .header--open .header__subnav li a,
+      .header--closing .header__subnav li a {
+        animation-duration: 0.15s !important;
+      }
+      /* Reduce stagger delays between items (open) */
+      .header--open .header__subnav li:nth-child(2) a {
+        animation-delay: 20ms !important;
+      }
+      .header--open .header__subnav li:nth-child(3) a {
+        animation-delay: 40ms !important;
+      }
+      .header--open .header__subnav li:nth-child(4) a {
+        animation-delay: 60ms !important;
+      }
+      /* Reduce stagger delays (close — reversed) */
+      .header--closing .header__subnav li:first-child a {
+        animation-delay: 60ms !important;
+      }
+      .header--closing .header__subnav li:nth-child(2) a {
+        animation-delay: 40ms !important;
+      }
+      .header--closing .header__subnav li:nth-child(3) a {
+        animation-delay: 20ms !important;
+      }
+
+      /* ── SHOW SUBNAV INSTANTLY ON DESKTOP (no fade/delay) ── */
+      .template-homepage .header__subnav {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        transition: none !important;
+      }
+
+      /* ── SHOW MENU BUTTON INSTANTLY (no 0.6s fade, no waiting for intro-ended) ── */
+      .template-homepage.lottie-started .btn--menu {
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        transition: none !important;
+      }
     </style>
   </head>
 
@@ -504,17 +560,17 @@
           <header class="header">
             <div class="header__nav">
               <a href="index.htm" data-navigo="" class="logo-link">
-                <!-- <img
-                  class="header__logo"
-                  src="assets/img/final_logo.svg"
-                  alt="Poster"
-                /> -->
-
                 <img
                   class="header__logo"
                   src="assets/img/final_logo.svg"
                   alt="Poster"
                 />
+
+                <!-- <img
+                  class="header__logo"
+                  src="assets/img/version_1/white.png"
+                  alt="Poster"
+                /> -->
               </a>
               <a href="#main_menu" class="btn btn--menu">
                 <span>menu.</span>
@@ -604,7 +660,8 @@
                       class="intro-anim"
                       data-animation="assets/img/intro-animation.json"
                       data-scale="1"
-                      data-scale-mobile="2.0"
+                      data-scale-mobile="1.4"
+                      data-speed=".7"
                     ></div>
                   </div>
                 </div>
@@ -910,16 +967,26 @@
       function _startVideoLoading(existingVideos, count) {
         // Load first video and auto-play it
         if (existingVideos[0] && existingVideos[0].src) {
-          existingVideos[0].load();
-          existingVideos[0].addEventListener(
-            'canplay',
-            function () {
-              if (this.paused) {
-                this.play().catch(() => {});
-              }
-            },
-            { once: true }
-          );
+          // Skip .load() if video already has data (from video-preloader.js)
+          // to avoid restarting the video mid-play
+          if (existingVideos[0].readyState >= 3) {
+            // Already buffered enough — just play if paused
+            if (existingVideos[0].paused) {
+              existingVideos[0].play().catch(() => {});
+            }
+            // If already playing, do nothing — seamless transition
+          } else {
+            existingVideos[0].load();
+            existingVideos[0].addEventListener(
+              'canplay',
+              function () {
+                if (this.paused) {
+                  this.play().catch(() => {});
+                }
+              },
+              { once: true }
+            );
+          }
         }
         // Stagger-load cursor player videos too
         const cursorVideos = document.querySelectorAll(
@@ -1114,7 +1181,7 @@
               // Safety fallback: render after 5 seconds even if intro never fires
               setTimeout(function () {
                 introCheck.disconnect();
-                if (!document.getElementById('works').children.length)
+                if (!document.querySelector('#works-list-project .box--work'))
                   renderAfterIntro();
               }, 5000);
             }
@@ -1174,6 +1241,10 @@
         var scale = mobScale || elScale || lsScale || urlScale || cssScale || 1;
         if (scale > 0 && scale !== 1) window.__posterIntroScale = scale;
 
+        // Read speed: data-speed attribute -> 1 (normal speed)
+        var speed = el ? parseFloat(el.getAttribute('data-speed')) : null;
+        if (speed > 0) window.__posterIntroSpeed = speed;
+
         // Show logo immediately — prevents initial flash while keeping it visible during preloader
         document.querySelector('.header__logo')?.classList.add('loaded');
       })();
@@ -1197,12 +1268,22 @@
       })();
     </script>
 
-    <!-- Cloudflare Web Analytics -->
-    <script
-      defer
-      src="https://static.cloudflareinsights.com/beacon.min.js"
-      data-cf-beacon='{"token": "624e41bf9bf046a88fa109aebee0d778"}'
-    ></script>
+    <!-- Cloudflare Web Analytics (production only) -->
+    <script>
+      if (
+        location.hostname === 'dubaifilmmaker-preloader-option1.vercel.app' ||
+        location.hostname === 'posterco.tv'
+      ) {
+        var s = document.createElement('script');
+        s.defer = true;
+        s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+        s.setAttribute(
+          'data-cf-beacon',
+          '{"token": "624e41bf9bf046a88fa109aebee0d778"}'
+        );
+        document.body.appendChild(s);
+      }
+    </script>
     <script>
       // Re-initialize build.min.js hover effects after dynamic content loads
       window.addEventListener(
@@ -1222,7 +1303,7 @@
                 const vid = e.target;
                 vid.currentTime = 0;
                 vid.parentElement.classList.add('show-video');
-                vid.play();
+                vid.play().catch(() => {});
               });
 
               newVideo.addEventListener('mouseleave', function (e) {

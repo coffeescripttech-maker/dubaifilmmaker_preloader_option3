@@ -7,18 +7,18 @@
   'use strict';
 
   let config = null;
-  let projectsData = null;
   let headerConfig = null;
-  
+
   // Global flag to track if intro animation has completed
   // Check immediately if intro-ended class already exists
-  let introHasEnded = document.body?.classList?.contains('intro-ended') || false;
+  let introHasEnded =
+    document.body?.classList?.contains('intro-ended') || false;
 
   const DEBUG_LOGS = false;
-  
+
   // Track loaded stylesheets to avoid duplicates
   const loadedStylesheets = new Set();
-  
+
   /**
    * Dynamically load a CSS file
    * @param {string} href - Path to CSS file
@@ -30,62 +30,67 @@
       console.log(`✓ Stylesheet already loaded: ${id}`);
       return Promise.resolve();
     }
-    
+
     // Check if link element already exists
     if (document.getElementById(id)) {
       loadedStylesheets.add(id);
       console.log(`✓ Stylesheet link already exists: ${id}`);
       return Promise.resolve();
     }
-    
+
     return new Promise((resolve, reject) => {
       const link = document.createElement('link');
       link.id = id;
       link.rel = 'stylesheet';
       link.href = href;
-      
+
       link.onload = () => {
         loadedStylesheets.add(id);
         console.log(`✓ Loaded stylesheet: ${href}`);
         resolve();
       };
-      
+
       link.onerror = () => {
         console.error(`❌ Failed to load stylesheet: ${href}`);
         reject(new Error(`Failed to load ${href}`));
       };
-      
+
       document.head.appendChild(link);
     });
   }
-  
+
   /**
    * Load page-specific CSS based on slug
    * @param {string} slug - Page slug (about, contact, works, etc.)
    */
   async function loadPageCSS(slug) {
     const cssMap = {
-      'about': ['assets/css/templates/about.css'],
-      'contact': ['assets/css/templates/contact.css'],
-      'works': ['assets/css/templates/works.css'],
-      'homepage': [
+      about: ['assets/css/templates/about.css'],
+      contact: ['assets/css/templates/contact.css'],
+      works: ['assets/css/templates/works.css'],
+      homepage: [
         'assets/css/view-other-films-cta.css',
         'assets/css/homepage-pagination-desktop.css',
         'assets/css/slider-vertical-arrows.css'
       ]
     };
-    
+
     if (cssMap[slug]) {
-      const cssFiles = Array.isArray(cssMap[slug]) ? cssMap[slug] : [cssMap[slug]];
-      
+      const cssFiles = Array.isArray(cssMap[slug])
+        ? cssMap[slug]
+        : [cssMap[slug]];
+
       for (const cssFile of cssFiles) {
         try {
-          await loadStylesheet(cssFile, `${slug}-${cssFile.split('/').pop().replace('.css', '')}`);
+          await loadStylesheet(
+            cssFile,
+            `${slug}-${cssFile.split('/').pop().replace('.css', '')}`
+          );
         } catch (error) {
           console.warn(`⚠ Could not load CSS ${cssFile}:`, error);
         }
       }
-      
+
       console.log(`✓ Page CSS loaded for: ${slug}`);
     }
   }
@@ -98,7 +103,7 @@
       console.log('✓ Header config already loaded (from critical CSS)');
       return;
     }
-    
+
     try {
       const response = await fetch('/data/header.json');
       if (!response.ok) {
@@ -116,7 +121,12 @@
             name: 'Default Layout',
             logo: { src: 'assets/img/dubaifilmmaker.svg' },
             mobile: {
-              headerNav: { alignItems: 'center', padding: '0px 0', minHeight: '40px', flexDirection: 'row' },
+              headerNav: {
+                alignItems: 'center',
+                padding: '0px 0',
+                minHeight: '40px',
+                flexDirection: 'row'
+              },
               logoLink: { maxWidth: 'calc(100% - 100px)', flex: '1' },
               logo: { maxHeight: '80px', maxWidth: '100%', width: 'auto' }
             },
@@ -128,31 +138,16 @@
     }
   }
 
-  // Load projects data
-  async function loadProjectsData() {
-    try {
-      const response = await fetch('/projects-data.json');
-      if (!response.ok) {
-        throw new Error('Projects data file not found');
-      }
-      projectsData = await response.json();
-      console.log('✓ Projects data loaded');
-    } catch (error) {
-      console.warn('⚠ Could not load projects-data.json:', error);
-    }
-  }
-
   // Load configuration
   async function loadConfig() {
     try {
-      const response = await fetch('/config.json');
+      const response = await fetch('/config.json', { cache: 'no-cache' });
       if (!response.ok) {
         throw new Error('Config file not found');
       }
       config = await response.json();
       console.log('✓ Site config loaded:', config);
       await loadHeaderConfig();
-      await loadProjectsData();
       applyConfig();
     } catch (error) {
       console.warn('⚠ Could not load config.json, using defaults:', error);
@@ -180,177 +175,9 @@
     }
   }
 
-  // Update existing project item - preserves event handlers
-  function updateProjectItem(listItem, project) {
-    // Update data-cat attribute
-    listItem.setAttribute('data-cat', project.classification);
-
-    const link = listItem.querySelector('a.box--work__link');
-    if (link) {
-      // Update href
-      link.setAttribute('href', `works/${project.slug}`);
-
-      // Update text content
-      const infoH2 = link.querySelector('.box--work__info h2');
-      const infoPs = link.querySelectorAll('.box--work__info p');
-      if (infoH2) infoH2.textContent = project.title;
-      if (infoPs[0]) infoPs[0].textContent = project.director;
-      if (infoPs[1]) infoPs[1].textContent = project.category;
-
-      // Update image
-      const img = link.querySelector('img.video-img-poster');
-      if (img) {
-        img.setAttribute('data-src', project.posterImage);
-        img.setAttribute('data-srcset', project.posterImageSrcset);
-        // Trigger lazy load update
-        img.removeAttribute('src');
-        img.removeAttribute('srcset');
-      }
-
-      // Update video
-      const video = link.querySelector('video.js-video');
-      if (video) {
-        video.setAttribute('data-src', project.videoUrl);
-        // Reset video
-        video.removeAttribute('src');
-        video.load();
-      }
-
-      // Update cursor text
-      const cursorH2 = link.querySelector('.cursor-main-text h2');
-      const cursorPs = link.querySelectorAll('.cursor-main-text p');
-      if (cursorH2) cursorH2.textContent = project.title;
-      if (cursorPs[0]) cursorPs[0].textContent = project.director;
-      if (cursorPs[1]) cursorPs[1].textContent = project.category;
-    }
-  }
-
-  // Create new project item
-  function createProjectItem(project) {
-    const li = document.createElement('li');
-    li.className = 'box box--work';
-    li.setAttribute('data-cat', project.classification);
-
-    li.innerHTML = `
-                    <a
-                      href="works/${project.slug}"
-                      data-navigo
-                      class="box--work__link js-has-cursor-text"
-                    >
-                      <div class="box--work__info">
-                        <h2>${project.title}</h2>
-                        <p>${project.director}</p>
-                        <p>${project.category}</p>
-                      </div>
-
-                      <div class="box--work__video video-wrapper has-poster">
-                        <img
-                          class="video-img-poster lazy-media"
-                          data-src="${project.posterImage}"
-                          data-srcset="${project.posterImageSrcset}"
-                          alt=""
-                        />
-                        <video
-                          class="js-video lazy-media"
-                          data-src="${project.videoUrl}"
-                          playsinline
-                          loop
-                          muted
-                        ></video>
-                      </div>
-                      <div class="cursor-text-animated js-cursor-text-animated">
-                        <div
-                          class="mooving-elements is-arrow"
-                          data-friction="1"
-                        >
-                          <svg
-                            width="11"
-                            height="10"
-                            viewBox="0 0 11 10"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              d="M8.72366 3.91174H7.0685L5.14349 3.8482L6.53777 4.99985L8.40882 6.65189L7.19444 7.72412L5.3234 6.07209L4.01007 4.83306L4.07303 6.50892L4.06404 8.02593L2.3819 6.54069L2.39989 2.42649L7.04152 2.42649L8.72366 3.91174Z"
-                              fill="white"
-                            />
-                          </svg>
-                        </div>
-                        <div
-                          class="mooving-elements shift cursor-main-text"
-                          data-friction="5"
-                        >
-                          <h2>${project.title}</h2>
-                          <p>${project.director}</p>
-                          <p>${project.category}</p>
-                        </div>
-                      </div>
-                    </a>
-`;
-    return li;
-  }
-
-  // Load site content based on mode (dubaifilmmaker or posterco)
-  function loadSiteContent(siteMode) {
-    if (!projectsData || !projectsData[siteMode]) {
-      console.warn(`⚠ No data found for site mode: ${siteMode}`);
-      return;
-    }
-
-    const projects = projectsData[siteMode].projects;
-    const projectsList = document.querySelector(
-      '.bloc-projects-listing .list--works'
-    );
-
-    if (!projectsList) {
-      console.warn('⚠ Projects list container not found');
-      console.log('Available elements:', {
-        blocProjectsListing: document.querySelector('.bloc-projects-listing'),
-        listWorks: document.querySelector('.list--works'),
-        worksId: document.querySelector('#works')
-      });
-      return;
-    }
-
-    console.log(
-      `🔄 Updating projects with ${siteMode} content...`,
-      projectsList
-    );
-
-    // Get existing <li> elements
-    const existingItems = Array.from(
-      projectsList.querySelectorAll('li.box--work')
-    );
-
-    // Update existing items and add new ones if needed
-    // projects.forEach((project, index) => {
-    //   if (existingItems[index]) {
-    //     // Update existing item - preserves event handlers
-    //     updateProjectItem(existingItems[index], project);
-    //   } else {
-    //     // Add new item if we have more projects than existing items
-    //     const newItem = createProjectItem(project);
-    //     projectsList.appendChild(newItem);
-    //   }
-    // });
-
-    // // Remove extra items if we have fewer projects
-    // if (existingItems.length > projects.length) {
-    //   for (let i = projects.length; i < existingItems.length; i++) {
-    //     existingItems[i].remove();
-    //   }
-    // }
-
-    // console.log(`✓ Updated ${projects.length} projects for site: ${siteMode}`);
-
-    // // Trigger lazy loading update for updated images
-    // setTimeout(() => {
-    //   if (typeof LazyLoad !== 'undefined' && window.lazyLoadInstance) {
-    //     window.lazyLoadInstance.update();
-    //     console.log('✓ Lazy loading updated for content changes');
-    //   }
-    // }, 100);
-  }
+  // (Removed: updateProjectItem, createProjectItem, loadSiteContent — all were dead code
+  //  referencing the removed projectsData variable. Data loading is handled by
+  //  data-loader.js and the inline scripts in index.html.)
 
   // Apply header styles from data/header.json
   function applyHeaderStyles() {
@@ -360,7 +187,8 @@
     }
 
     // Use preset from critical CSS if already set (from CMS API), otherwise use local config
-    const preset = window.__headerPresetName || headerConfig.activePreset || 'default';
+    const preset =
+      window.__headerPresetName || headerConfig.activePreset || 'default';
     const presetConfig = headerConfig.presets?.[preset];
 
     if (!presetConfig) {
@@ -371,7 +199,9 @@
     // Only apply reversed-specific styles when activePreset is explicitly "reversed"
     // Otherwise, use the built-in CSS defaults (logo left, menu right)
     if (preset !== 'reversed') {
-      console.log(`ℹ️ Using default header layout (preset: "${preset}") — reversed-specific styles not applied`);
+      console.log(
+        `ℹ️ Using default header layout (preset: "${preset}") — reversed-specific styles not applied`
+      );
       return;
     }
 
@@ -382,69 +212,90 @@
       // Check if text logo is active from preloader
       const logoType = sessionStorage.getItem('logoType');
       const logoText = sessionStorage.getItem('logoText');
-      
+
       // If text logo is active, let text-logo-handler.js handle it
       if (logoType === 'text' && logoText) {
-        console.log('✓ Text logo active from preloader - skipping SVG logo update');
+        console.log(
+          '✓ Text logo active from preloader - skipping SVG logo update'
+        );
         return;
       }
-      
+
       const logoElements = document.querySelectorAll('.header__logo');
-      
+
       // Detect if current page has light background (about, contact)
-      const isLightBackground = document.body.classList.contains('template-about') || 
-                                document.body.classList.contains('template-contact') ||
-                                document.body.classList.contains('body-light');
-      
+      const isLightBackground =
+        document.body.classList.contains('template-about') ||
+        document.body.classList.contains('template-contact') ||
+        document.body.classList.contains('body-light');
+
       logoElements.forEach(logo => {
         // Check if we're on homepage with intro animation
         const hasIntroAnimation = document.querySelector('.bloc-intro');
-        const isHomepage = document.body.classList.contains('template-homepage');
+        const isHomepage =
+          document.body.classList.contains('template-homepage');
 
         // On homepage with intro, skip setting src - preloader will handle it
         if (hasIntroAnimation && isHomepage) {
-          console.log('✓ Skipping logo src on homepage - preloader will set it');
+          console.log(
+            '✓ Skipping logo src on homepage - preloader will set it'
+          );
           return; // Skip this logo
         }
 
         // Use dark logo for light backgrounds, light logo for dark backgrounds
-        const logoSrc = isLightBackground && presetConfig.logo.srcDark 
-          ? presetConfig.logo.srcDark 
-          : presetConfig.logo.src;
-        
+        const logoSrc =
+          isLightBackground && presetConfig.logo.srcDark
+            ? presetConfig.logo.srcDark
+            : presetConfig.logo.src;
+
         logo.src = logoSrc;
         if (presetConfig.logo.alt) {
           logo.alt = presetConfig.logo.alt;
         }
-        
+
         // Add 'loaded' class to make logo visible with smooth transition
         logo.classList.add('loaded');
-        
+
         // Log the actual rendered size after a short delay to ensure CSS is applied
         setTimeout(() => {
           const rect = logo.getBoundingClientRect();
           const computedStyle = window.getComputedStyle(logo);
           const screenWidth = window.innerWidth;
           const isMobile = screenWidth <= 767;
-          
+
           console.log('📏 HEADER LOGO SIZE:');
-          console.log('   Screen: ' + screenWidth + 'px (' + (isMobile ? 'MOBILE' : 'DESKTOP') + ')');
+          console.log(
+            '   Screen: ' +
+              screenWidth +
+              'px (' +
+              (isMobile ? 'MOBILE' : 'DESKTOP') +
+              ')'
+          );
           console.log('   Rendered Width: ' + rect.width.toFixed(2) + 'px');
           console.log('   Rendered Height: ' + rect.height.toFixed(2) + 'px');
           console.log('   CSS max-height: ' + computedStyle.maxHeight);
           console.log('   CSS max-width: ' + computedStyle.maxWidth);
           console.log('   CSS width: ' + computedStyle.width);
-          console.log('   Position: top=' + rect.top.toFixed(2) + 'px, left=' + rect.left.toFixed(2) + 'px');
+          console.log(
+            '   Position: top=' +
+              rect.top.toFixed(2) +
+              'px, left=' +
+              rect.left.toFixed(2) +
+              'px'
+          );
         }, 100);
       });
-      
+
       const logoVariant = isLightBackground ? 'dark' : 'light';
-      console.log(`✓ Logo updated to: ${isLightBackground && presetConfig.logo.srcDark ? presetConfig.logo.srcDark : presetConfig.logo.src} (${logoVariant} variant)`);
+      console.log(
+        `✓ Logo updated to: ${isLightBackground && presetConfig.logo.srcDark ? presetConfig.logo.srcDark : presetConfig.logo.src} (${logoVariant} variant)`
+      );
     }
 
     // Inject dynamic CSS for header styles
     injectHeaderCSS(presetConfig);
-    
+
     // Add resize listener to log header logo size changes
     let resizeTimeout;
     window.addEventListener('resize', () => {
@@ -456,9 +307,15 @@
           const computedStyle = window.getComputedStyle(logo);
           const screenWidth = window.innerWidth;
           const isMobile = screenWidth <= 767;
-          
+
           console.log('📏 HEADER LOGO SIZE (after resize):');
-          console.log('   Screen: ' + screenWidth + 'px (' + (isMobile ? 'MOBILE' : 'DESKTOP') + ')');
+          console.log(
+            '   Screen: ' +
+              screenWidth +
+              'px (' +
+              (isMobile ? 'MOBILE' : 'DESKTOP') +
+              ')'
+          );
           console.log('   Rendered Width: ' + rect.width.toFixed(2) + 'px');
           console.log('   Rendered Height: ' + rect.height.toFixed(2) + 'px');
           console.log('   CSS max-height: ' + computedStyle.maxHeight);
@@ -473,7 +330,7 @@
   function injectComprehensiveHeaderCSS(presetConfig) {
     const styleId = 'header-comprehensive-styles';
     let styleElement = document.getElementById(styleId);
-    
+
     if (!styleElement) {
       styleElement = document.createElement('style');
       styleElement.id = styleId;
@@ -486,54 +343,82 @@
     if (presetConfig.mobile) {
       css += `
       @media (max-width: 767px) {
-        ${presetConfig.mobile.navigationWrapper ? `
+        ${
+          presetConfig.mobile.navigationWrapper
+            ? `
         html body .app-container .header .header__navigations-wrapper {
           ${presetConfig.mobile.navigationWrapper.left ? `left: ${presetConfig.mobile.navigationWrapper.left} !important;` : ''}
           ${presetConfig.mobile.navigationWrapper.right ? `right: ${presetConfig.mobile.navigationWrapper.right} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.mobile.subNav ? `
+        ${
+          presetConfig.mobile.subNav
+            ? `
         html body .app-container .header .header__subnav {
           ${presetConfig.mobile.subNav.left ? `left: ${presetConfig.mobile.subNav.left} !important;` : ''}
           ${presetConfig.mobile.subNav.right ? `right: ${presetConfig.mobile.subNav.right} !important;` : ''}
           ${presetConfig.mobile.subNav.textAlign ? `text-align: ${presetConfig.mobile.subNav.textAlign} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.mobile.subNavUl ? `
+        ${
+          presetConfig.mobile.subNavUl
+            ? `
         html body .app-container .header .header__subnav ul {
           ${presetConfig.mobile.subNavUl.alignItems ? `align-items: ${presetConfig.mobile.subNavUl.alignItems} !important;` : ''}
           ${presetConfig.mobile.subNavUl.paddingLeft ? `padding-left: ${presetConfig.mobile.subNavUl.paddingLeft} !important;` : ''}
           ${presetConfig.mobile.subNavUl.paddingRight ? `padding-right: ${presetConfig.mobile.subNavUl.paddingRight} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.mobile.subNavLi ? `
+        ${
+          presetConfig.mobile.subNavLi
+            ? `
         html body .app-container .header .header__subnav li {
           ${presetConfig.mobile.subNavLi.textAlign ? `text-align: ${presetConfig.mobile.subNavLi.textAlign} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.mobile.subNavLink ? `
+        ${
+          presetConfig.mobile.subNavLink
+            ? `
         html body .app-container .header .header__subnav li a {
           ${presetConfig.mobile.subNavLink.justifyContent ? `justify-content: ${presetConfig.mobile.subNavLink.justifyContent} !important;` : ''}
           ${presetConfig.mobile.subNavLink.textAlign ? `text-align: ${presetConfig.mobile.subNavLink.textAlign} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.mobile.menuButtonOpen ? `
+        ${
+          presetConfig.mobile.menuButtonOpen
+            ? `
         html body.header--open .app-container .header .header__nav .btn--menu {
           ${presetConfig.mobile.menuButtonOpen.clipPath ? `clip-path: ${presetConfig.mobile.menuButtonOpen.clipPath} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.mobile.menuButtonOpenBefore ? `
+        ${
+          presetConfig.mobile.menuButtonOpenBefore
+            ? `
         html body.header--open .app-container .header .header__nav .btn--menu:before {
           ${presetConfig.mobile.menuButtonOpenBefore.left ? `left: ${presetConfig.mobile.menuButtonOpenBefore.left} !important;` : ''}
           ${presetConfig.mobile.menuButtonOpenBefore.right ? `right: ${presetConfig.mobile.menuButtonOpenBefore.right} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
       }
       `;
     }
@@ -542,33 +427,49 @@
     if (presetConfig.desktop) {
       css += `
       @media (min-width: 768px) {
-        ${presetConfig.desktop.navigationWrapper ? `
+        ${
+          presetConfig.desktop.navigationWrapper
+            ? `
         html body .app-container .header .header__navigations-wrapper {
           ${presetConfig.desktop.navigationWrapper.left ? `left: ${presetConfig.desktop.navigationWrapper.left} !important;` : ''}
           ${presetConfig.desktop.navigationWrapper.right ? `right: ${presetConfig.desktop.navigationWrapper.right} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.desktop.subNav ? `
+        ${
+          presetConfig.desktop.subNav
+            ? `
         html body .app-container .header .header__subnav {
           ${presetConfig.desktop.subNav.left ? `left: ${presetConfig.desktop.subNav.left} !important;` : ''}
           ${presetConfig.desktop.subNav.right ? `right: ${presetConfig.desktop.subNav.right} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.desktop.subNavUl ? `
+        ${
+          presetConfig.desktop.subNavUl
+            ? `
         html body .app-container .header .header__subnav ul {
           ${presetConfig.desktop.subNavUl.alignItems ? `align-items: ${presetConfig.desktop.subNavUl.alignItems} !important;` : ''}
           ${presetConfig.desktop.subNavUl.paddingLeft ? `padding-left: ${presetConfig.desktop.subNavUl.paddingLeft} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.desktop.subNavLink ? `
+        ${
+          presetConfig.desktop.subNavLink
+            ? `
         html body .app-container .header .header__subnav li a {
           ${presetConfig.desktop.subNavLink.justifyContent ? `justify-content: ${presetConfig.desktop.subNavLink.justifyContent} !important;` : ''}
           ${presetConfig.desktop.subNavLink.textAlign ? `text-align: ${presetConfig.desktop.subNavLink.textAlign} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
       }
       `;
     }
@@ -581,7 +482,7 @@
   function injectHeaderCSS(presetConfig) {
     const styleId = 'header-config-styles';
     let styleElement = document.getElementById(styleId);
-    
+
     if (!styleElement) {
       styleElement = document.createElement('style');
       styleElement.id = styleId;
@@ -633,61 +534,93 @@
 
         html body .app-container .header .header__nav .btn--menu {
           flex-shrink: 0 !important;
-          ${presetConfig.mobile.menuButton ? `
+          ${
+            presetConfig.mobile.menuButton
+              ? `
           ${presetConfig.mobile.menuButton.width ? `width: ${presetConfig.mobile.menuButton.width} !important;` : ''}
           ${presetConfig.mobile.menuButton.margin ? `margin: ${presetConfig.mobile.menuButton.margin} !important;` : 'margin: 0 !important;'}
           ${presetConfig.mobile.menuButton.position ? `position: ${presetConfig.mobile.menuButton.position} !important;` : ''}
-          ` : 'margin: 0 !important;'}
+          `
+              : 'margin: 0 !important;'
+          }
         }
         
-        ${presetConfig.mobile.navigationWrapper ? `
+        ${
+          presetConfig.mobile.navigationWrapper
+            ? `
         html body .app-container .header .header__navigations-wrapper {
           ${presetConfig.mobile.navigationWrapper.left ? `left: ${presetConfig.mobile.navigationWrapper.left} !important;` : ''}
           ${presetConfig.mobile.navigationWrapper.right ? `right: ${presetConfig.mobile.navigationWrapper.right} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.mobile.subNav ? `
+        ${
+          presetConfig.mobile.subNav
+            ? `
         html body .app-container .header .header__subnav {
           ${presetConfig.mobile.subNav.left ? `left: ${presetConfig.mobile.subNav.left} !important;` : ''}
           ${presetConfig.mobile.subNav.right ? `right: ${presetConfig.mobile.subNav.right} !important;` : ''}
           ${presetConfig.mobile.subNav.textAlign ? `text-align: ${presetConfig.mobile.subNav.textAlign} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.mobile.subNavUl ? `
+        ${
+          presetConfig.mobile.subNavUl
+            ? `
         html body .app-container .header .header__subnav ul {
           ${presetConfig.mobile.subNavUl.alignItems ? `align-items: ${presetConfig.mobile.subNavUl.alignItems} !important;` : ''}
           ${presetConfig.mobile.subNavUl.paddingLeft ? `padding-left: ${presetConfig.mobile.subNavUl.paddingLeft} !important;` : ''}
           ${presetConfig.mobile.subNavUl.paddingRight ? `padding-right: ${presetConfig.mobile.subNavUl.paddingRight} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.mobile.subNavLi ? `
+        ${
+          presetConfig.mobile.subNavLi
+            ? `
         html body .app-container .header .header__subnav li {
           ${presetConfig.mobile.subNavLi.textAlign ? `text-align: ${presetConfig.mobile.subNavLi.textAlign} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.mobile.subNavLink ? `
+        ${
+          presetConfig.mobile.subNavLink
+            ? `
         html body .app-container .header .header__subnav li a {
           ${presetConfig.mobile.subNavLink.justifyContent ? `justify-content: ${presetConfig.mobile.subNavLink.justifyContent} !important;` : ''}
           ${presetConfig.mobile.subNavLink.textAlign ? `text-align: ${presetConfig.mobile.subNavLink.textAlign} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.mobile.menuButtonOpen ? `
+        ${
+          presetConfig.mobile.menuButtonOpen
+            ? `
         html body.header--open .app-container .header .header__nav .btn--menu {
           ${presetConfig.mobile.menuButtonOpen.clipPath ? `clip-path: ${presetConfig.mobile.menuButtonOpen.clipPath} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.mobile.menuButtonOpenBefore ? `
+        ${
+          presetConfig.mobile.menuButtonOpenBefore
+            ? `
         html body.header--open .app-container .header .header__nav .btn--menu:before {
           ${presetConfig.mobile.menuButtonOpenBefore.left ? `left: ${presetConfig.mobile.menuButtonOpenBefore.left} !important;` : ''}
           ${presetConfig.mobile.menuButtonOpenBefore.right ? `right: ${presetConfig.mobile.menuButtonOpenBefore.right} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
       }
       `;
     }
@@ -697,7 +630,9 @@
       css += `
       /* Desktop/Large screen styles */
       @media (min-width: 768px) {
-        ${presetConfig.desktop.headerNav ? `
+        ${
+          presetConfig.desktop.headerNav
+            ? `
         html body .app-container .header .header__nav {
           display: flex !important;
           ${presetConfig.desktop.headerNav.flexDirection ? `flex-direction: ${presetConfig.desktop.headerNav.flexDirection} !important;` : ''}
@@ -707,9 +642,13 @@
           ${presetConfig.desktop.headerNav.width ? `width: ${presetConfig.desktop.headerNav.width} !important;` : ''}
           ${presetConfig.desktop.headerNav.minHeight ? `min-height: ${presetConfig.desktop.headerNav.minHeight} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.desktop.logoLink ? `
+        ${
+          presetConfig.desktop.logoLink
+            ? `
         html body .app-container .header .header__nav .logo-link {
           display: flex !important;
           align-items: center !important;
@@ -717,7 +656,9 @@
           ${presetConfig.desktop.logoLink.flexShrink ? `flex-shrink: ${presetConfig.desktop.logoLink.flexShrink} !important;` : ''}
           ${presetConfig.desktop.logoLink.margin ? `margin: ${presetConfig.desktop.logoLink.margin} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
 
         html body .app-container .header .header__nav .logo-link .header__logo {
           display: block !important;
@@ -726,33 +667,49 @@
           ${presetConfig.desktop.logo.margin ? `margin: ${presetConfig.desktop.logo.margin} !important;` : ''}
         }
         
-        ${presetConfig.desktop.navigationWrapper ? `
+        ${
+          presetConfig.desktop.navigationWrapper
+            ? `
         html body .app-container .header .header__navigations-wrapper {
           ${presetConfig.desktop.navigationWrapper.left ? `left: ${presetConfig.desktop.navigationWrapper.left} !important;` : ''}
           ${presetConfig.desktop.navigationWrapper.right ? `right: ${presetConfig.desktop.navigationWrapper.right} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.desktop.subNav ? `
+        ${
+          presetConfig.desktop.subNav
+            ? `
         html body .app-container .header .header__subnav {
           ${presetConfig.desktop.subNav.left ? `left: ${presetConfig.desktop.subNav.left} !important;` : ''}
           ${presetConfig.desktop.subNav.right ? `right: ${presetConfig.desktop.subNav.right} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.desktop.subNavUl ? `
+        ${
+          presetConfig.desktop.subNavUl
+            ? `
         html body .app-container .header .header__subnav ul {
           ${presetConfig.desktop.subNavUl.alignItems ? `align-items: ${presetConfig.desktop.subNavUl.alignItems} !important;` : ''}
           ${presetConfig.desktop.subNavUl.paddingLeft ? `padding-left: ${presetConfig.desktop.subNavUl.paddingLeft} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
         
-        ${presetConfig.desktop.subNavLink ? `
+        ${
+          presetConfig.desktop.subNavLink
+            ? `
         html body .app-container .header .header__subnav li a {
           ${presetConfig.desktop.subNavLink.justifyContent ? `justify-content: ${presetConfig.desktop.subNavLink.justifyContent} !important;` : ''}
           ${presetConfig.desktop.subNavLink.textAlign ? `text-align: ${presetConfig.desktop.subNavLink.textAlign} !important;` : ''}
         }
-        ` : ''}
+        `
+            : ''
+        }
       }
       `;
     }
@@ -864,22 +821,8 @@
     // 5. BUTTON STYLE (View other films CTA, Reel button, etc.)
     handleButtonStyle(config.styling);
 
-    // 0. LOAD SITE CONTENT (if projects data is available)
-    // Do this before disabling links so new content is loaded first
-    if (config.site && projectsData) {
-      // Small delay to ensure DOM is fully ready
-      setTimeout(() => {
-        loadSiteContent(config.site.mode);
-
-        // Apply link disabling AFTER content is loaded
-        setTimeout(() => {
-          handleProjectsListing(features.projectsListing.clickable);
-        }, 50);
-      }, 100);
-    } else {
-      // If no content to load, just disable existing links
-      handleProjectsListing(features.projectsListing.clickable);
-    }
+    // 0. PROJECTS LISTING CLICK HANDLING
+    handleProjectsListing(features.projectsListing.clickable);
 
     // Log current mode
     if (config.demo.mode) {
@@ -924,12 +867,14 @@
       const link = document.querySelector(settings.selector);
       if (link) {
         if (!settings.enabled) {
-          // Hide the entire list item from navigation bar
+          // Remove the entire list item from navigation bar
           var li = link.closest('li');
-          if (li) li.style.display = 'none';
-          console.log(`✓ ${page} link hidden from navigation`);
+          if (li && li.parentNode) {
+            li.parentNode.removeChild(li);
+            console.log(`✓ ${page} link REMOVED from navigation`);
+          }
         } else {
-          // Show the list item if it was hidden
+          // Ensure the link is enabled
           var li2 = link.closest('li');
           if (li2) li2.style.display = '';
           enableLink(link);
@@ -982,11 +927,14 @@
     });
 
     // Show/hide mobile view project link (NOT the arrows)
-    const mobileButtonContainer = document.querySelector('.box--home__buttons-mobile');
+    const mobileButtonContainer = document.querySelector(
+      '.box--home__buttons-mobile'
+    );
     if (mobileButtonContainer) {
       const mobileLink = mobileButtonContainer.querySelector('.mobile-link');
       if (!homeBoxConfig.mobileViewProject.enabled) {
-        if (mobileLink) mobileLink.style.setProperty('display', 'none', 'important');
+        if (mobileLink)
+          mobileLink.style.setProperty('display', 'none', 'important');
         console.log('✓ Mobile view project link hidden');
       } else {
         if (mobileLink) mobileLink.style.removeProperty('display');
@@ -995,8 +943,13 @@
     }
 
     // Swipe navigation vs arrows (set flag — arrows applied later by slider-rendered handler)
-    window.__swipeNavigationEnabled = homeBoxConfig.swipeNavigation?.enabled === true;
-    console.log(window.__swipeNavigationEnabled ? '✓ Swipe navigation mode set' : '✓ Arrow navigation mode set');
+    window.__swipeNavigationEnabled =
+      homeBoxConfig.swipeNavigation?.enabled === true;
+    console.log(
+      window.__swipeNavigationEnabled
+        ? '✓ Swipe navigation mode set'
+        : '✓ Arrow navigation mode set'
+    );
   }
 
   // Handle button style (geometry vs original pill-shaped)
@@ -1004,7 +957,10 @@
     if (!stylingConfig || !stylingConfig.buttonStyle) return;
 
     const style = stylingConfig.buttonStyle;
-    document.body.classList.remove('btn-style--geometry', 'btn-style--original');
+    document.body.classList.remove(
+      'btn-style--geometry',
+      'btn-style--original'
+    );
     document.body.classList.add('btn-style--' + style);
     console.log('✓ Button style set to: ' + style);
   }
@@ -1164,13 +1120,13 @@
   }
 
   // Global content loading functions (always available for SPA navigation)
-  window.loadContactContent = async function() {
+  window.loadContactContent = async function () {
     try {
       console.log('Loading contact page content...');
-      
+
       // Load page-specific CSS first
       await loadPageCSS('contact');
-      
+
       const data = await window.fetchContact();
       window.PageRenderer.renderContactContent(data.page);
     } catch (error) {
@@ -1178,61 +1134,66 @@
     }
   };
 
-  window.loadAboutContent = async function() {
+  window.loadAboutContent = async function () {
     try {
       console.log('Loading about page content...');
-      
+
       // Load page-specific CSS first
       await loadPageCSS('about');
-      
+
       const data = await window.fetchAbout();
       window.PageRenderer.renderAboutContent(data.page);
     } catch (error) {
       console.error('Error loading about content:', error);
     }
-  }
+  };
 
-  window.loadProjects = async function() {
+  window.loadProjects = async function () {
     try {
       console.log('Loading projects for works page...');
-      
+
       // Load page-specific CSS first
       await loadPageCSS('works');
-      
+
       const projects = await window.fetchProjects();
       window.PageRenderer.renderWorksProjects(projects);
     } catch (error) {
       console.error('Error loading projects:', error);
     }
-  }
+  };
 
-  window.loadIndexProjects = async function(fromNavigation = false) {
+  window.loadIndexProjects = async function (fromNavigation = false) {
     try {
-      console.log('Loading projects for index page...', fromNavigation ? '(from navigation)' : '');
-      
+      console.log(
+        'Loading projects for index page...',
+        fromNavigation ? '(from navigation)' : ''
+      );
+
       // If navigating from another page, load homepage CSS and inject HTML structure
       if (fromNavigation) {
         // Load homepage-specific CSS first
         await loadPageCSS('homepage');
-        
+
         if (!document.querySelector('.homepage-inner-wrapper')) {
           console.log('🏗 Injecting homepage HTML structure...');
-          
-          const pageInnerContent = document.querySelector('.page-inner-content');
+
+          const pageInnerContent = document.querySelector(
+            '.page-inner-content'
+          );
           if (pageInnerContent) {
             try {
               const response = await fetch('/index.html');
               const htmlText = await response.text();
-              
+
               // Parse and extract homepage content
               const parser = new DOMParser();
               const doc = parser.parseFromString(htmlText, 'text/html');
               const homepageContent = doc.querySelector('.page-inner-content');
-              
+
               if (homepageContent) {
                 pageInnerContent.innerHTML = homepageContent.innerHTML;
                 console.log('✓ Homepage HTML structure injected');
-                
+
                 // Wait a moment for DOM to settle
                 await new Promise(resolve => setTimeout(resolve, 100));
               }
@@ -1242,16 +1203,16 @@
           }
         }
       }
-      
+
       // Load and render projects
       const projects = await window.fetchProjects();
       window.PageRenderer.renderIndexProjects(projects);
       window.PageRenderer.renderHomepageSlider(projects);
-      
+
       // Ensure header logo is visible when navigating back to homepage
       const body = document.body;
       const hasIntroEnded = body.classList.contains('intro-ended');
-      
+
       if (hasIntroEnded) {
         body.classList.add('intro-ended'); // Ensure it's added
         const headerLogo = document.querySelector('.header__logo');
@@ -1259,38 +1220,50 @@
           headerLogo.classList.add('loaded');
           headerLogo.style.opacity = '1';
           headerLogo.style.visibility = 'visible';
-          console.log('✓ Header logo visibility ensured on homepage navigation');
+          console.log(
+            '✓ Header logo visibility ensured on homepage navigation'
+          );
         }
       }
     } catch (error) {
       console.error('Error loading projects:', error);
     }
-  }
+  };
 
   // Update body class based on data-slug
   function updateBodyClass(slug) {
     console.log('🔄 updateBodyClass called with slug:', slug);
     const body = document.body;
-    
+
     // IMPORTANT: Preserve intro-ended class if it exists
     const hadIntroEnded = body.classList.contains('intro-ended');
     if (hadIntroEnded) {
       console.log('✓ Preserving intro-ended class');
     }
-    
+
     // Remove all template classes
-    body.classList.remove('template-homepage', 'template-projects', 'template-about', 'template-contact');
-    
+    body.classList.remove(
+      'template-homepage',
+      'template-projects',
+      'template-about',
+      'template-contact'
+    );
+
     // Restore intro-ended if it was present
     if (hadIntroEnded) {
       body.classList.add('intro-ended');
     }
-    
+
     // If no slug provided, try to detect from URL or current active link
     if (!slug) {
       const path = window.location.pathname;
       console.log('No slug provided, detecting from path:', path);
-      if (path === '/' || path === '/index.html' || path === '/index' || path === '') {
+      if (
+        path === '/' ||
+        path === '/index.html' ||
+        path === '/index' ||
+        path === ''
+      ) {
         slug = 'homepage';
       } else if (path.includes('/works')) {
         slug = 'works';
@@ -1300,26 +1273,32 @@
         slug = 'contact';
       }
     }
-    
+
     // Add appropriate class based on slug
     let newClass = '';
     if (slug === 'homepage') {
       newClass = 'template-homepage';
-      
+
       // When navigating back to homepage (not initial load), show header logo
       // The intro animation only runs on initial page load
       const blocIntro = document.querySelector('.bloc-intro');
-      const hasIntroEnded = body.classList.contains('intro-ended') || introHasEnded;
-      
-      console.log('📍 Homepage navigation - hasIntroEnded:', hasIntroEnded, 'introHasEnded flag:', introHasEnded);
-      
+      const hasIntroEnded =
+        body.classList.contains('intro-ended') || introHasEnded;
+
+      console.log(
+        '📍 Homepage navigation - hasIntroEnded:',
+        hasIntroEnded,
+        'introHasEnded flag:',
+        introHasEnded
+      );
+
       // If intro has already ended (navigating back), ensure logo is visible
       if (hasIntroEnded || !blocIntro) {
         // FORCE intro-ended class to be present
         body.classList.add('intro-ended');
         introHasEnded = true; // Set global flag
         console.log('✓ Added intro-ended class to body');
-        
+
         // Force logo visibility immediately with inline styles
         const headerLogo = document.querySelector('.header__logo');
         if (headerLogo) {
@@ -1329,7 +1308,7 @@
           headerLogo.style.display = 'block';
           console.log('✓ Header logo forced visible with inline styles');
         }
-        
+
         // Hide intro wrapper if it exists
         const introWrapper = document.querySelector('.intro-wrapper');
         if (introWrapper) {
@@ -1344,7 +1323,7 @@
     } else if (slug === 'contact') {
       newClass = 'template-contact';
     }
-    
+
     if (newClass) {
       body.classList.add(newClass);
       // Force style recalculation
@@ -1359,69 +1338,106 @@
   // Listen for route changes and reapply header styles
   function setupRouteChangeListener() {
     console.log('🔧 Setting up SPA navigation with header sync...');
-    
+
     // Set flag immediately to prevent app-init.js from loading initial page
     window.__initialPageLoaded = true;
-    
+
     // Store the target page slug when a link is clicked
     let targetSlug = null;
     let contentChangeDetected = false;
-    
+
     // Capture clicks on navigation links BEFORE the router processes them
-    document.addEventListener('click', function(e) {
-      console.log('👁 Click detected on:', e.target);
-      const link = e.target.closest('[data-navigo]');
-      console.log('🔗 Closest data-navigo link:', link);
-      
-      if (link) {
-        const slug = link.getAttribute('data-slug');
-        const href = link.getAttribute('href');
-        console.log('🎯 Navigation link found - slug:', slug, 'href:', href);
-        
-        if (slug) {
-          // Add navigation start banner
-          console.log('');
-          console.log('═══════════════════════════════════════════════════════');
-          console.log('🧭 NAVIGATION STARTED');
-          console.log('═══════════════════════════════════════════════════════');
-          console.log('📍 From:', document.body.className.match(/template-(\w+)/)?.[1] || 'unknown');
-          console.log('📍 To:', slug);
-          console.log('⏰ Time:', new Date().toLocaleTimeString());
-          console.log('═══════════════════════════════════════════════════════');
-          console.log('');
-          
-          targetSlug = slug;
-          contentChangeDetected = false;
-          console.log('✅ Target page set:', targetSlug);
-          
-          // If navigating to homepage, ensure intro-ended is set (skip intro animation)
-          if (slug === 'homepage') {
-            console.log('🏠 Homepage link clicked - ensuring intro-ended state');
-            document.body.classList.add('intro-ended');
-            document.documentElement.classList.add('intro-ended');
-            localStorage.setItem('introHasEnded', 'true');
-            introHasEnded = true;
-            
-            // Force logo visible immediately
-            const headerLogo = document.querySelector('.header__logo');
-            if (headerLogo) {
-              headerLogo.style.setProperty('opacity', '1', 'important');
-              headerLogo.style.setProperty('visibility', 'visible', 'important');
-              headerLogo.style.setProperty('display', 'block', 'important');
-              console.log('✓ Logo forced visible on homepage navigation');
-            }
+    document.addEventListener(
+      'click',
+      function (e) {
+        console.log('👁 Click detected on:', e.target);
+        const link = e.target.closest('[data-navigo]');
+        console.log('🔗 Closest data-navigo link:', link);
+
+        if (link) {
+          const slug = link.getAttribute('data-slug');
+          const href = link.getAttribute('href');
+          console.log('🎯 Navigation link found - slug:', slug, 'href:', href);
+
+          // Re-apply navigation link visibility BEFORE navigation
+          if (config && config.features && config.features.navigation) {
+            console.log(
+              '⚙️ Nav config for about:',
+              config.features.navigation.aboutPage.enabled
+            );
+            handleNavigationLinks(config.features.navigation);
           }
-        } else {
-          console.warn('⚠ Link has no data-slug attribute');
+
+          // Re-apply button style before navigation
+          if (config && config.styling) {
+            handleButtonStyle(config.styling);
+          }
+
+          if (slug) {
+            // Add navigation start banner
+            console.log('');
+            console.log(
+              '═══════════════════════════════════════════════════════'
+            );
+            console.log('🧭 NAVIGATION STARTED');
+            console.log(
+              '═══════════════════════════════════════════════════════'
+            );
+            console.log(
+              '📍 From:',
+              document.body.className.match(/template-(\w+)/)?.[1] || 'unknown'
+            );
+            console.log('📍 To:', slug);
+            console.log('⏰ Time:', new Date().toLocaleTimeString());
+            console.log(
+              '═══════════════════════════════════════════════════════'
+            );
+            console.log('');
+
+            targetSlug = slug;
+            contentChangeDetected = false;
+            console.log('✅ Target page set:', targetSlug);
+
+            // If navigating to homepage, ensure intro-ended is set (skip intro animation)
+            if (slug === 'homepage') {
+              console.log(
+                '🏠 Homepage link clicked - ensuring intro-ended state'
+              );
+              document.body.classList.add('intro-ended');
+              document.documentElement.classList.add('intro-ended');
+              localStorage.setItem('introHasEnded', 'true');
+              introHasEnded = true;
+
+              // Force logo visible immediately
+              const headerLogo = document.querySelector('.header__logo');
+              if (headerLogo) {
+                headerLogo.style.setProperty('opacity', '1', 'important');
+                headerLogo.style.setProperty(
+                  'visibility',
+                  'visible',
+                  'important'
+                );
+                headerLogo.style.setProperty('display', 'block', 'important');
+                console.log('✓ Logo forced visible on homepage navigation');
+              }
+            }
+          } else {
+            console.warn('⚠ Link has no data-slug attribute');
+          }
         }
-      }
-    }, true); // Use capture phase to run before router
+      },
+      true
+    ); // Use capture phase to run before router
 
     // Watch for DOM changes to detect when new content loads
     let debounceTimer = null;
-    const observer = new MutationObserver(function(mutations) {
-      if (DEBUG_LOGS) console.log('📡 MutationObserver triggered, mutations:', mutations.length);
-      
+    const observer = new MutationObserver(function (mutations) {
+      if (DEBUG_LOGS)
+        console.log(
+          '📡 MutationObserver triggered, mutations:',
+          mutations.length
+        );
+
       // Only process if we have a target slug and haven't already updated
       if (!targetSlug) {
         if (DEBUG_LOGS) console.log('⏸ No target slug set, skipping...');
@@ -1431,56 +1447,97 @@
         if (DEBUG_LOGS) console.log('⏸ Content already detected, skipping...');
         return;
       }
-      
+
       // Debounce to avoid multiple triggers
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(() => {
-        if (DEBUG_LOGS) console.log('🔍 DOM changed, checking if content loaded for:', targetSlug);
-        
+        if (DEBUG_LOGS)
+          console.log(
+            '🔍 DOM changed, checking if content loaded for:',
+            targetSlug
+          );
+
         // Verify content has actually changed by checking for page-specific elements
         let contentLoaded = false;
-        
+
         if (targetSlug === 'contact') {
           const staffList = document.querySelector('.list--staff');
           const addressBox = document.querySelector('.box--address');
-          contentLoaded = staffList || addressBox || document.body.textContent.includes('Loading staff');
-          if (DEBUG_LOGS) console.log('Contact elements found:', { staffList: !!staffList, addressBox: !!addressBox });
+          contentLoaded =
+            staffList ||
+            addressBox ||
+            document.body.textContent.includes('Loading staff');
+          if (DEBUG_LOGS)
+            console.log('Contact elements found:', {
+              staffList: !!staffList,
+              addressBox: !!addressBox
+            });
         } else if (targetSlug === 'about') {
-          const aboutBox = document.querySelector('.about-content, .about-inner-wrapper');
-          contentLoaded = aboutBox || document.body.textContent.includes('Loading about');
-          if (DEBUG_LOGS) console.log('About elements found:', { aboutBox: !!aboutBox });
+          // About content: check for rendered elements OR if page-inner-content was replaced
+          const aboutBox = document.querySelector(
+            '.about-content, .about-inner-wrapper, .btn-reel'
+          );
+          const pageInner = document.querySelector('.page-inner-content');
+          contentLoaded =
+            aboutBox || (pageInner && pageInner.children.length > 0);
+          if (DEBUG_LOGS)
+            console.log('About elements found:', {
+              aboutBox: !!aboutBox,
+              hasChildren: pageInner ? pageInner.children.length > 0 : false
+            });
         } else if (targetSlug === 'works') {
           const listWorks = document.querySelector('.list--works');
           const worksListing = document.querySelector('.bloc-projects-listing');
           const worksContainer = document.getElementById('works-list-project');
           contentLoaded = listWorks || worksListing || worksContainer;
-          if (DEBUG_LOGS) console.log('Works elements found:', { listWorks: !!listWorks, worksListing: !!worksListing, worksContainer: !!worksContainer });
+          if (DEBUG_LOGS)
+            console.log('Works elements found:', {
+              listWorks: !!listWorks,
+              worksListing: !!worksListing,
+              worksContainer: !!worksContainer
+            });
         } else if (targetSlug === 'homepage') {
           const homepageSlider = document.getElementById('homepage-slider');
           const worksContainer = document.getElementById('works');
           contentLoaded = homepageSlider || worksContainer;
-          if (DEBUG_LOGS) console.log('Homepage elements found:', { slider: !!homepageSlider, works: !!worksContainer });
+          if (DEBUG_LOGS)
+            console.log('Homepage elements found:', {
+              slider: !!homepageSlider,
+              works: !!worksContainer
+            });
         }
-        
-        if (contentLoaded) {
-          console.log('✓ Content loaded for:', targetSlug);
-          console.log('🔄 Updating body class and header styles...');
-          
+
+        // Always re-apply config features regardless of content detection
+        // This ensures button style, nav links, etc. are set before content renders
+        if (targetSlug !== 'homepage') {
+          // Only re-apply body-level classes for non-homepage navigation
           updateBodyClass(targetSlug);
+
+          if (config && config.features && config.features.navigation) {
+            handleNavigationLinks(config.features.navigation);
+          }
+          if (config && config.styling) {
+            handleButtonStyle(config.styling);
+          }
+          if (config && config.features && config.features.projectsNav) {
+            handleProjectsNav(config.features.projectsNav.enabled);
+          }
           if (headerConfig) {
             applyHeaderStyles();
           }
-          
-          // Trigger text logo replacement if needed (for SPA navigation)
-          if (typeof window.replaceLogoWithText === 'function') {
-            setTimeout(() => {
-              window.replaceLogoWithText();
-            }, 100);
-          }
-          
-          // Trigger page-specific content loading
+        }
+
+        // Trigger text logo replacement if needed (for SPA navigation)
+        if (typeof window.replaceLogoWithText === 'function') {
+          setTimeout(() => {
+            window.replaceLogoWithText();
+          }, 100);
+        }
+
+        if (contentLoaded) {
+          console.log('✓ Content loaded for:', targetSlug);
           console.log('📦 Triggering content loader for:', targetSlug);
-          
+
           if (targetSlug === 'contact') {
             console.log('✅ Calling loadContactContent()');
             window.loadContactContent();
@@ -1495,12 +1552,15 @@
             if (typeof window.loadProjects === 'function') {
               console.log('✅ Calling loadProjects()');
               window.loadProjects();
-              
+
               // Add retry mechanism to ensure projects load
               setTimeout(() => {
-                const worksContainer = document.getElementById('works-list-project');
+                const worksContainer =
+                  document.getElementById('works-list-project');
                 if (worksContainer && worksContainer.children.length === 0) {
-                  console.log('🔄 Retrying loadProjects() - container was empty');
+                  console.log(
+                    '🔄 Retrying loadProjects() - container was empty'
+                  );
                   window.loadProjects();
                 }
               }, 500);
@@ -1509,32 +1569,43 @@
             }
           } else if (targetSlug === 'homepage') {
             if (typeof window.loadIndexProjects === 'function') {
-              console.log('✅ Calling loadIndexProjects() with navigation flag');
+              console.log(
+                '✅ Calling loadIndexProjects() with navigation flag'
+              );
               const navStartTime = performance.now();
               window.loadIndexProjects(true); // Pass true to indicate navigation
-              
+
               // Add completion summary after a short delay
               setTimeout(() => {
-                const navDuration = ((performance.now() - navStartTime) / 1000).toFixed(2);
+                const navDuration = (
+                  (performance.now() - navStartTime) /
+                  1000
+                ).toFixed(2);
                 console.log('');
-                console.log('═══════════════════════════════════════════════════════');
+                console.log(
+                  '═══════════════════════════════════════════════════════'
+                );
                 console.log('✅ HOMEPAGE NAVIGATION COMPLETE');
-                console.log('═══════════════════════════════════════════════════════');
+                console.log(
+                  '═══════════════════════════════════════════════════════'
+                );
                 console.log('⏱️  Total time: ' + navDuration + 's');
                 console.log('📍 Current page: Homepage');
                 console.log('🎬 Videos: Loaded and playing');
                 console.log('🎨 Slider: Initialized');
                 console.log('🔗 Menu: Active');
-                console.log('═══════════════════════════════════════════════════════');
+                console.log(
+                  '═══════════════════════════════════════════════════════'
+                );
                 console.log('');
               }, 1000);
             } else {
               console.warn('⚠ loadIndexProjects not defined yet');
             }
           }
-          
+
           contentChangeDetected = true;
-          
+
           // Reset after a delay to allow for next navigation
           setTimeout(() => {
             targetSlug = null;
@@ -1543,7 +1614,7 @@
         }
       }, 150);
     });
-    
+
     // Start observing the document body for changes
     observer.observe(document.body, {
       childList: true,
@@ -1555,7 +1626,7 @@
     console.log('🔍 Detecting initial page on load...');
     console.log('Current URL:', window.location.pathname);
     console.log('Current body class:', document.body.className);
-    
+
     // Detect initial page from body class or URL
     let initialSlug = null;
     if (document.body.classList.contains('template-homepage')) {
@@ -1567,34 +1638,38 @@
     } else if (document.body.classList.contains('template-contact')) {
       initialSlug = 'contact';
     }
-    
+
     if (initialSlug) {
       console.log('✓ Initial page detected from body class:', initialSlug);
-      
+
       // CRITICAL: Skip homepage initialization - it has its own inline script
       if (initialSlug === 'homepage') {
-        console.log('⏸ Skipping homepage initialization - inline script handles it');
-        console.log('✓ site-config.js will only handle navigation clicks from homepage');
-        
+        console.log(
+          '⏸ Skipping homepage initialization - inline script handles it'
+        );
+        console.log(
+          '✓ site-config.js will only handle navigation clicks from homepage'
+        );
+
         // Just apply header styles, don't load content
         if (headerConfig) {
           console.log('🎨 Applying header styles for homepage...');
           applyHeaderStyles();
         }
-        
+
         console.log('✓ SPA navigation setup complete - ready for clicks');
         return; // Exit early, don't load homepage content
       }
-      
+
       // For other pages (about, contact, works), load content normally
       if (headerConfig) {
         console.log('🎨 Applying header styles for initial page...');
         applyHeaderStyles();
       }
-      
+
       // Load content for initial page (NOT homepage)
       console.log('📦 Loading initial page content for:', initialSlug);
-      
+
       setTimeout(() => {
         if (initialSlug === 'works') {
           if (typeof window.loadProjects === 'function') {
@@ -1608,7 +1683,9 @@
           }
         } else if (initialSlug === 'contact') {
           if (typeof window.loadContactContent === 'function') {
-            console.log('✅ Calling loadContactContent() for initial page load');
+            console.log(
+              '✅ Calling loadContactContent() for initial page load'
+            );
             window.loadContactContent();
           }
         }
@@ -1617,9 +1694,9 @@
       console.log('⚠ No template class found, detecting from URL...');
       updateBodyClass();
     }
-    
+
     console.log('✓ SPA navigation setup complete');
-    
+
     // Listen for intro animation completion
     if (window.a && window.a.introEnded) {
       window.a.introEnded.listen(() => {
@@ -1637,10 +1714,9 @@
     }
   }
 
-
   // Initialize when DOM is ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       loadConfig();
       setupRouteChangeListener();
     });
@@ -1652,6 +1728,5 @@
   // Expose reload function for debugging
   window.reloadSiteConfig = loadConfig;
 
-    window.setupRouteChangeListenerFunc = setupRouteChangeListener;
-
+  window.setupRouteChangeListenerFunc = setupRouteChangeListener;
 })();
