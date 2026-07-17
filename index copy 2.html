@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
 
-      <link rel="preconnect" href="https://fonts.googleapis.com/" />
+    <link rel="preconnect" href="https://fonts.googleapis.com/" />
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Azeret+Mono&amp;display=swap"
@@ -51,7 +51,7 @@
 
     <link rel="canonical" href="index.htm" />
 
- <link href="assets/css/view-other-films-cta.css" rel="stylesheet" />
+    <link href="assets/css/view-other-films-cta.css" rel="stylesheet" />
     <link href="assets/css/homepage-pagination-desktop.css" rel="stylesheet" />
     <link href="assets/css/slider-vertical-arrows.css" rel="stylesheet" />
 
@@ -63,18 +63,12 @@
     <meta name="twitter:title" content="Poster â€“ Homepage" />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <meta
-      name="description"
-      content="Post-Production company based in the heart of Paris, dedicated to audiovisual production, advertisement, digital content, music video feature films & documentaries."
-    />
-    <meta
-      property="og:description"
-      content="Post-Production company based in the heart of Paris, dedicated to audiovisual production, advertisement, digital content, music video feature films & documentaries."
-    />
+    <meta name="description" content="" />
+    <meta property="og:description" content="" />
 
     <title>Poster â€“ Homepage</title>
 
-       <style>
+    <style>
       /* Fix video thumbnail aspect ratio - prevent squishing */
       .bloc-projects-listing
         .box--work__video.video-wrapper.has-poster
@@ -92,34 +86,34 @@
       }
 
       /* Header styles loaded from data/header.json - prevent FOUC */
-      
+
       /* On homepage FIRST VISIT ONLY, keep header logo hidden until intro completes */
       /* Disabled - logo now visible during intro for size sync */
       /* body.template-homepage:not(.intro-ended) .header__logo {
         opacity: 0 !important;
         visibility: hidden !important;
       } */
-      
+
       /* After intro ends on homepage, show header logo with quick fade */
       body.template-homepage.intro-ended .header__logo {
         opacity: 1 !important;
         visibility: visible !important;
       }
-      
+
       /* CRITICAL OVERRIDE: If intro-ended exists, ALWAYS show logo (handles navigation back) */
       body.intro-ended .header__logo {
         opacity: 1 !important;
         visibility: visible !important;
         display: block !important;
       }
-      
+
       /* NUCLEAR OPTION: Force visibility with highest specificity */
       html body.intro-ended .header__logo {
         opacity: 1 !important;
         visibility: visible !important;
         display: block !important;
       }
-   
+
       /* On other pages, show logo normally */
       body:not(.template-homepage) .header__logo.loaded {
         opacity: 1;
@@ -188,11 +182,15 @@
 
       /* Smooth fade-in for dynamic content */
       .box--home__link {
-        transition: opacity 0.3s ease, pointer-events 0.3s ease;
+        transition:
+          opacity 0.3s ease,
+          pointer-events 0.3s ease;
       }
 
       .mobile-link {
-        transition: opacity 0.3s ease, pointer-events 0.3s ease;
+        transition:
+          opacity 0.3s ease,
+          pointer-events 0.3s ease;
       }
 
       /* Arrow buttons styling - Mobile only */
@@ -268,7 +266,7 @@
         opacity: 1 !important;
         visibility: visible !important;
       }
-      
+
       /* DESKTOP: Always show projects-nav on homepage */
       @media (min-width: 768px) {
         .template-homepage header:not(.on-works-section) .projects-nav,
@@ -278,7 +276,7 @@
           visibility: visible !important;
         }
       }
-      
+
       /* MOBILE: Keep scroll-based behavior (hidden until scroll to works) */
       @media (max-width: 767px) {
         .template-homepage header:not(.on-works-section) .projects-nav,
@@ -288,7 +286,7 @@
           visibility: hidden !important;
         }
       }
-      
+
       /* Ensure header navigation elements are always on top and clickable */
       /* .header__navigations-wrapper {
         z-index: 10000 !important;
@@ -309,7 +307,7 @@
         z-index: 10003 !important;
         position: relative !important;
       } */
-      
+
       .projects-nav .list--cat li a {
         z-index: 10004 !important;
         position: relative !important;
@@ -340,8 +338,14 @@
       }
 
       /* Override any hiding rules from build.min.css */
-      html.projects-nav-always-visible .template-homepage header:not(.on-works-section) .list--cat,
-      html.projects-nav-always-visible .template-homepage header:not(.on-works-section) .projects-nav {
+      html.projects-nav-always-visible
+        .template-homepage
+        header:not(.on-works-section)
+        .list--cat,
+      html.projects-nav-always-visible
+        .template-homepage
+        header:not(.on-works-section)
+        .projects-nav {
         opacity: 1 !important;
         pointer-events: auto !important;
         visibility: visible !important;
@@ -444,27 +448,24 @@
               <div class="projects-nav">
                 <ul class="list list--cat">
                   <li>
-                    <a href="#works" class="js-filter-cat is-active" data-cat="*">All</a>
-                  </li>
-                  <li>
                     <a
                       href="#works"
-                      class="js-filter-cat"
-                      data-cat="TVC"
+                      class="js-filter-cat is-active"
+                      data-cat="*"
+                      >All</a
+                    >
+                  </li>
+                  <li>
+                    <a href="#works" class="js-filter-cat" data-cat="TVC"
                       >TVC / Brand Films</a
                     >
                   </li>
 
                   <li>
-                    <a
-                      href="#works"
-                      class="js-filter-cat"
-                      data-cat="narrative"
+                    <a href="#works" class="js-filter-cat" data-cat="narrative"
                       >Narrative Films</a
                     >
                   </li>
-
-  
                 </ul>
               </div>
             </div>
@@ -493,28 +494,63 @@
 
               <div class="box box--home">
                 <div class="box--home__info">
-                  <div class="box--home__info__counter"><span>1</span>/<span id="slider-total">-</span></div>
+                  <div class="box--home__info__counter">
+                    <span>1</span>/<span id="slider-total">-</span>
+                  </div>
 
                   <!-- Slider wrapper for better pagination positioning -->
                   <div class="slider-wrapper">
                     <!-- Desktop navigation arrows (inside slider-wrapper for proper centering) -->
-                    <button class="arrow-prev slider-nav-arrow" aria-label="Previous project">
-                      <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M10 2L2 10L10 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <button
+                      class="arrow-prev slider-nav-arrow"
+                      aria-label="Previous project"
+                    >
+                      <svg
+                        width="12"
+                        height="20"
+                        viewBox="0 0 12 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M10 2L2 10L10 18"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
                       </svg>
                     </button>
-                    <button class="arrow-next slider-nav-arrow" aria-label="Next project">
-                      <svg width="12" height="20" viewBox="0 0 12 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M2 2L10 10L2 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <button
+                      class="arrow-next slider-nav-arrow"
+                      aria-label="Next project"
+                    >
+                      <svg
+                        width="12"
+                        height="20"
+                        viewBox="0 0 12 20"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M2 2L10 10L2 18"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
                       </svg>
                     </button>
-                    
+
                     <!-- Empty container - will be populated by page-renderer.js -->
-                    <ul class="list list--home js-has-cursor-player" id="homepage-slider">
+                    <ul
+                      class="list list--home js-has-cursor-player"
+                      id="homepage-slider"
+                    >
                       <!-- Loading state -->
                       <!-- <div style="padding: 2rem; text-align: center; color: #999;">Loading projects...</div> -->
                     </ul>
-                    
+
                     <div class="box--home__timeline">
                       <span class="is-animated"></span>
                     </div>
@@ -523,8 +559,21 @@
                   <!-- View Other Films CTA -->
                   <a href="works.html" class="view-other-films-cta" data-navigo>
                     <span class="cta-text">View Other Films</span>
-                    <svg class="cta-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M4 10H16M16 10L11 5M16 10L11 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <svg
+                      class="cta-arrow"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M4 10H16M16 10L11 5M16 10L11 15"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
                     </svg>
                   </a>
                 </div>
@@ -534,11 +583,26 @@
                   href="#"
                   class="box--home__link js-has-cursor-text"
                   id="homepage-main-link"
-                  style="pointer-events: none; opacity: 0.5;"
+                  style="pointer-events: none; opacity: 0.5"
                 >
-                  <div class="box--home__wrapper video-wrapper" id="homepage-main-video-wrapper">
+                  <div
+                    class="box--home__wrapper video-wrapper"
+                    id="homepage-main-video-wrapper"
+                  >
                     <!-- Loading state -->
-                    <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #1a1a1a; color: #999;">Loading video...</div>
+                    <div
+                      style="
+                        width: 100%;
+                        height: 100%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background: #1a1a1a;
+                        color: #999;
+                      "
+                    >
+                      Loading video...
+                    </div>
                   </div>
                   <div class="cursor-text-animated js-cursor-text-animated">
                     <div class="mooving-elements is-arrow" data-friction="1">
@@ -568,8 +632,8 @@
                   <a
                     href="#"
                     class="mobile-link"
-                  id="homepage-mobile-link"
-                    style="pointer-events: none; opacity: 0.5;"
+                    id="homepage-mobile-link"
+                    style="pointer-events: none; opacity: 0.5"
                     >view project</a
                   >
                   <div class="arrows">
@@ -578,13 +642,13 @@
                   </div>
                 </div>
               </div>
-   
-             <div class="bloc-projects-listing">
-                <ul id="works" class="list list--works" data-initial-count="">
-                
-                
-              
-                </ul>
+
+              <div class="bloc-projects-listing">
+                <ul
+                  id="works"
+                  class="list list--works"
+                  data-initial-count=""
+                ></ul>
               </div>
             </div>
           </div>
@@ -601,49 +665,49 @@
 
     <!-- Hybrid Slider Script: Inline generation + Preload detection -->
     <script>
-      (async function() {
+      (async function () {
         console.log('Fetching API data...');
-        
+
         try {
           // Wait for projects (may already be loaded by video-preloader.js)
-          const projects = window.__projectsPreloadPromise 
-            ? await window.__projectsPreloadPromise 
+          const projects = window.__projectsPreloadPromise
+            ? await window.__projectsPreloadPromise
             : await window.fetchProjects();
-          
+
           if (projects.length > 0) {
             const sliderProjects = projects.slice(0, 6);
             window.__sliderProjects = sliderProjects;
-            
+
             console.log(`Loaded ${sliderProjects.length} projects for slider`);
-            
+
             // Generate list items with cursor player
             generateListItems(sliderProjects);
-            
+
             // Generate videos (with preload detection!)
             generateVideoElements(sliderProjects);
-            
+
             // Update counter and links
             updateInitialState(sliderProjects);
-            
+
             // Enable links
             enableLinks(sliderProjects[0]);
-                  generateProjectsListing(projects);
+            generateProjectsListing(projects);
             console.log('Slider ready - build.min.js will handle navigation');
           }
         } catch (err) {
           console.error('API failed:', err);
         }
-        
+
         function generateListItems(projects) {
           const listContainer = document.querySelector('.list--home');
           if (!listContainer) return;
-          
+
           // Generate cursor player wrapper with videos
           let cursorPlayerHTML = `
             <div class="cursor-player-animated js-cursor-player-animated">
               <div class="mooving-elements players-wrapper is-player" data-friction="7">
           `;
-          
+
           projects.forEach(project => {
             cursorPlayerHTML += `
                 <video
@@ -655,18 +719,19 @@
                 ></video>
             `;
           });
-          
+
           cursorPlayerHTML += `
               </div>
             </div>
           `;
-          
+
           // Generate list items
           let listItemsHTML = '';
           projects.forEach((project, index) => {
-            const link = project.link || `works/project-detail#id=${project.id}`;
+            const link =
+              project.link || `works/project-detail#id=${project.id}`;
             const displayClient = project.client_short || project.client;
-            
+
             listItemsHTML += `
               <li class="${index === 0 ? 'is-active' : ''}" data-project-index="${index}">
                 <a href="${link}" class="js-change-video">
@@ -678,13 +743,15 @@
               </li>
             `;
           });
-          
+
           // Insert cursor player + list items
           listContainer.innerHTML = cursorPlayerHTML + listItemsHTML;
-          
+
           // Load cursor player videos
           setTimeout(() => {
-            const cursorVideos = listContainer.querySelectorAll('.player-animated-player[data-src]');
+            const cursorVideos = listContainer.querySelectorAll(
+              '.player-animated-player[data-src]'
+            );
             cursorVideos.forEach((video, index) => {
               if (video.dataset.src && !video.src) {
                 video.src = video.dataset.src;
@@ -692,7 +759,7 @@
               }
             });
             console.log('Loaded', cursorVideos.length, 'cursor player videos');
-            
+
             // Dispatch event for cursor player re-initialization
             setTimeout(() => {
               const event = new Event('slider-rendered');
@@ -700,22 +767,35 @@
               console.log('✓ Dispatched slider-rendered event');
             }, 200);
           }, 100);
-          
-          console.log('Generated', projects.length, 'list items with .js-change-video');
+
+          console.log(
+            'Generated',
+            projects.length,
+            'list items with .js-change-video'
+          );
         }
-        
+
         function generateVideoElements(projects) {
           const videoWrapper = document.querySelector('.box--home__wrapper');
           if (!videoWrapper) return;
-          
+
           // ✅ PRELOAD DETECTION: Check if first video is already preloaded
-          const preloadVideo = window.__preloadVideo || videoWrapper.querySelector('#preload-video');
+          const preloadVideo =
+            window.__preloadVideo ||
+            videoWrapper.querySelector('#preload-video');
           const firstVideoUrl = projects[0].video_url;
-          
-          if (preloadVideo && preloadVideo.src && preloadVideo.src.includes(firstVideoUrl.split('/').pop())) {
+
+          if (
+            preloadVideo &&
+            preloadVideo.src &&
+            preloadVideo.src.includes(firstVideoUrl.split('/').pop())
+          ) {
             console.log('✅ VIDEO PRELOAD: Keeping existing preloaded video');
-            console.log('📊 VIDEO PRELOAD: readyState:', preloadVideo.readyState);
-            
+            console.log(
+              '📊 VIDEO PRELOAD: readyState:',
+              preloadVideo.readyState
+            );
+
             // Ensure it has the right classes
             if (!preloadVideo.classList.contains('js-main-video')) {
               preloadVideo.classList.add('js-main-video');
@@ -726,14 +806,14 @@
             if (!preloadVideo.classList.contains('loaded')) {
               preloadVideo.classList.add('loaded');
             }
-            
+
             // Remove id to avoid conflicts
             if (preloadVideo.id === 'preload-video') {
               preloadVideo.removeAttribute('id');
             }
-            
+
             // Generate remaining 5 videos (skip first one)
-            projects.slice(1).forEach((project) => {
+            projects.slice(1).forEach(project => {
               const video = document.createElement('video');
               video.className = 'js-main-video';
               video.src = project.video_url;
@@ -741,90 +821,108 @@
               video.playsinline = true;
               video.setAttribute('muted', '');
               video.setAttribute('playsinline', '');
-              
+
               videoWrapper.appendChild(video);
             });
-            
-            console.log('Generated', projects.length - 1, 'additional videos (kept preloaded first video)');
-            
+
+            console.log(
+              'Generated',
+              projects.length - 1,
+              'additional videos (kept preloaded first video)'
+            );
+
             // Preloaded video should already be playing or ready to play
             if (preloadVideo.paused && preloadVideo.readyState >= 3) {
-              preloadVideo.play().catch(err => console.log('Autoplay blocked:', err.message));
+              preloadVideo
+                .play()
+                .catch(err => console.log('Autoplay blocked:', err.message));
             }
           } else {
             console.log('⚠️ No preloaded video found, creating all videos');
-            
+
             // Clear and create all 6 videos
             videoWrapper.innerHTML = '';
-            
+
             projects.forEach((project, index) => {
               const video = document.createElement('video');
               video.className = 'js-main-video';
-              
+
               if (index === 0) {
                 video.classList.add('visible', 'loaded');
               }
-              
+
               video.src = project.video_url;
               video.muted = true;
               video.playsinline = true;
               video.setAttribute('muted', '');
               video.setAttribute('playsinline', '');
-              
+
               videoWrapper.appendChild(video);
             });
-            
+
             console.log('Generated', projects.length, 'video elements');
-            
+
             // Load first video
-            const firstVideo = videoWrapper.querySelector('video.js-main-video.visible');
+            const firstVideo = videoWrapper.querySelector(
+              'video.js-main-video.visible'
+            );
             if (firstVideo) {
               firstVideo.load();
-              firstVideo.addEventListener('canplay', function() {
-                if (this.paused) {
-                  this.play().catch(err => console.log('Autoplay blocked:', err.message));
-                  console.log('First video playing');
-                }
-              }, { once: true });
+              firstVideo.addEventListener(
+                'canplay',
+                function () {
+                  if (this.paused) {
+                    this.play().catch(err =>
+                      console.log('Autoplay blocked:', err.message)
+                    );
+                    console.log('First video playing');
+                  }
+                },
+                { once: true }
+              );
             }
           }
-          
+
           // Load other videos with delay
-          const otherVideos = videoWrapper.querySelectorAll('video.js-main-video:not(.visible)');
+          const otherVideos = videoWrapper.querySelectorAll(
+            'video.js-main-video:not(.visible)'
+          );
           otherVideos.forEach((video, index) => {
             setTimeout(() => video.load(), (index + 1) * 100);
           });
         }
-        
+
         function updateInitialState(projects) {
           // Update counter
           const counter = document.querySelector('.box--home__info__counter');
           if (counter) {
             counter.innerHTML = `<span>1</span>/<span id="slider-total">${projects.length}</span>`;
           }
-          
+
           // Update initial links
           const firstProject = projects[0];
           if (!firstProject) return;
-          
+
           const mainLink = document.querySelector('.box--home__link');
           if (mainLink) {
-            mainLink.href = firstProject.link || `works/project-detail#id=${firstProject.id}`;
+            mainLink.href =
+              firstProject.link || `works/project-detail#id=${firstProject.id}`;
           }
-          
+
           const mobileLink = document.querySelector('.mobile-link');
           if (mobileLink) {
-            mobileLink.href = firstProject.link || `works/project-detail#id=${firstProject.id}`;
+            mobileLink.href =
+              firstProject.link || `works/project-detail#id=${firstProject.id}`;
           }
-          
+
           const cursorText = document.querySelector('.cursor-main-text');
           if (cursorText) {
             cursorText.textContent = `open ${firstProject.title}`;
           }
-          
+
           console.log('Initial state updated');
         }
-        
+
         function enableLinks(firstProject) {
           // Enable main link
           const mainLink = document.getElementById('homepage-main-link');
@@ -833,7 +931,7 @@
             mainLink.style.opacity = '1';
             console.log('✓ Main link enabled');
           }
-          
+
           // Enable mobile link
           const mobileLink = document.getElementById('homepage-mobile-link');
           if (mobileLink) {
@@ -843,22 +941,22 @@
           }
         }
 
-           function generateProjectsListing(projects) {
+        function generateProjectsListing(projects) {
           console.log('Rendering projects listing grid...');
           const worksContainer = document.getElementById('works');
-          
+
           if (!worksContainer) {
             console.warn('Works container not found');
             return;
           }
-          
+
           // Clear container
           worksContainer.innerHTML = '';
-          
+
           // Generate project items with LAZY LOADING (data-src, not src)
           projects.forEach(project => {
             const displayClient = project.client_short || project.client;
-            
+
             const projectHTML = `
               <li class="box box--work" data-cat="${project.classification}">
                 <a href="javascript:void(0)" class="box--work__link js-has-cursor-text" 
@@ -891,30 +989,40 @@
                 </a>
               </li>
             `;
-            
+
             worksContainer.innerHTML += projectHTML;
           });
-          
+
           // Initialize LazyLoad for dynamically added elements
           setTimeout(() => {
             // Create a new LazyLoad instance for the projects listing
             // This mimics build.min.js LazyLoad behavior for dynamic content
-            const lazyElements = document.querySelectorAll('.bloc-projects-listing .lazy-media');
-            console.log(`Found ${lazyElements.length} lazy elements to initialize`);
-            
+            const lazyElements = document.querySelectorAll(
+              '.bloc-projects-listing .lazy-media'
+            );
+            console.log(
+              `Found ${lazyElements.length} lazy elements to initialize`
+            );
+
             if (typeof LazyLoad !== 'undefined') {
               // Create new LazyLoad instance for dynamic content
               const projectsLazyLoad = new LazyLoad({
                 elements_selector: '.bloc-projects-listing .lazy-media',
                 threshold: 0,
-                callback_loaded: (el) => {
+                callback_loaded: el => {
                   el.classList.add('loaded');
                   console.log('✓ Lazy loaded:', el.tagName);
                 }
               });
-              console.log('✓ LazyLoad initialized for', projects.length, 'projects');
+              console.log(
+                '✓ LazyLoad initialized for',
+                projects.length,
+                'projects'
+              );
             } else {
-              console.warn('LazyLoad not available, loading all media immediately');
+              console.warn(
+                'LazyLoad not available, loading all media immediately'
+              );
               // Fallback: convert data-src to src immediately
               lazyElements.forEach(el => {
                 if (el.dataset.src) {
@@ -923,14 +1031,16 @@
                 }
               });
             }
-            
+
             // Add 'ready' class to fade in the listing
-            const blocListing = document.querySelector('.bloc-projects-listing');
+            const blocListing = document.querySelector(
+              '.bloc-projects-listing'
+            );
             if (blocListing) {
               blocListing.classList.add('ready');
               console.log('✓ Added ready class to bloc-projects-listing');
             }
-            
+
             // Dispatch event to trigger hover re-initialization
             setTimeout(() => {
               const event = new Event('projects-rendered');
@@ -938,300 +1048,474 @@
               console.log('✓ Dispatched projects-rendered event');
             }, 200);
           }, 100);
-          
-          console.log('✓ Projects listing grid rendered with', projects.length, 'projects (lazy loading enabled)');
+
+          console.log(
+            '✓ Projects listing grid rendered with',
+            projects.length,
+            'projects (lazy loading enabled)'
+          );
         }
       })();
     </script>
-    
+
     <script src="assets/js/intro-logo-size-sync.js"></script>
 
-        <!-- Cloudflare Web Analytics -->
-    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "624e41bf9bf046a88fa109aebee0d778"}'></script>
+    <!-- Cloudflare Web Analytics -->
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "624e41bf9bf046a88fa109aebee0d778"}'
+    ></script>
     <script>
       // Re-initialize build.min.js hover effects after dynamic content loads
-      window.addEventListener('projects-rendered', function() {
-        console.log('🔄 Re-initializing build.min.js hover effects...');
-        
-        // Find the bloc-projects-listing element
-        const projectsListing = document.querySelector('.bloc-projects-listing');
-        if (projectsListing) {
-          // Query all videos and re-attach hover listeners manually
-          const videos = projectsListing.querySelectorAll('.js-video');
-          console.log(`Found ${videos.length} videos to re-initialize`);
-          
-          videos.forEach(video => {
-            // Remove old listeners by cloning
-            const newVideo = video.cloneNode(true);
-            video.parentNode.replaceChild(newVideo, video);
-            
-            // Add hover listeners (matching build.min.js logic from lines 24165-24173)
-            newVideo.addEventListener('mouseenter', function(e) {
-              const vid = e.target;
-              vid.currentTime = 0;
-              vid.parentElement.classList.add('show-video');
-              vid.play();
-              console.log('✓ Video playing on hover');
-            });
-            
-            newVideo.addEventListener('mouseleave', function(e) {
-              const vid = e.target;
-              vid.parentElement.classList.remove('show-video');
-              vid.pause();
-              if (!vid.parentElement.querySelector('.video-img-poster')) {
+      window.addEventListener(
+        'projects-rendered',
+        function () {
+          console.log('🔄 Re-initializing build.min.js hover effects...');
+
+          // Find the bloc-projects-listing element
+          const projectsListing = document.querySelector(
+            '.bloc-projects-listing'
+          );
+          if (projectsListing) {
+            // Query all videos and re-attach hover listeners manually
+            const videos = projectsListing.querySelectorAll('.js-video');
+            console.log(`Found ${videos.length} videos to re-initialize`);
+
+            videos.forEach(video => {
+              // Remove old listeners by cloning
+              const newVideo = video.cloneNode(true);
+              video.parentNode.replaceChild(newVideo, video);
+
+              // Add hover listeners (matching build.min.js logic from lines 24165-24173)
+              newVideo.addEventListener('mouseenter', function (e) {
+                const vid = e.target;
                 vid.currentTime = 0;
-              }
-              console.log('✓ Video stopped on leave');
-            });
-          });
-          
-          // Re-initialize cursor text animations for dynamically loaded projects
-          const cursorTextElements = projectsListing.querySelectorAll('.js-cursor-text-animated');
-          console.log(`Found ${cursorTextElements.length} cursor text elements to re-initialize`);
-          
-          cursorTextElements.forEach(cursorEl => {
-            const wrapper = cursorEl.closest('.js-has-cursor-text');
-            if (!wrapper) return;
-            
-            // Add mouseenter/mouseleave to show/hide cursor text (matching build.min.js lines 24799-24804)
-            wrapper.addEventListener('mouseenter', function() {
-              cursorEl.classList.add('visible');
-              console.log('✓ Cursor text visible');
-            });
-            
-            wrapper.addEventListener('mouseleave', function() {
-              cursorEl.classList.remove('visible');
-              console.log('✓ Cursor text hidden');
-            });
-            
-            // Track mouse movement to position cursor text
-            wrapper.addEventListener('mousemove', function(e) {
-              const rect = cursorEl.getBoundingClientRect();
-              const x = e.clientX - rect.left;
-              const y = e.clientY - rect.top;
-              
-              // Update CSS custom properties for cursor position
-              const moovingElements = cursorEl.querySelectorAll('.mooving-elements');
-              moovingElements.forEach(el => {
-                el.style.setProperty('--x', `${x}px`);
-                el.style.setProperty('--y', `${y}px`);
+                vid.parentElement.classList.add('show-video');
+                vid.play();
+                console.log('✓ Video playing on hover');
+              });
+
+              newVideo.addEventListener('mouseleave', function (e) {
+                const vid = e.target;
+                vid.parentElement.classList.remove('show-video');
+                vid.pause();
+                if (!vid.parentElement.querySelector('.video-img-poster')) {
+                  vid.currentTime = 0;
+                }
+                console.log('✓ Video stopped on leave');
               });
             });
-          });
-          
-          console.log('✓ Hover effects and cursor text re-initialized');
-        }
-      }, { once: true });
-      
-      // Re-initialize cursor player for homepage slider after dynamic content loads
-      window.addEventListener('slider-rendered', function() {
-        console.log('🔄 Re-initializing cursor player for homepage slider...');
-        
-        const sliderContainer = document.querySelector('.list--home.js-has-cursor-player');
-        if (!sliderContainer) {
-          console.warn('Slider container not found');
-          return;
-        }
-        
-        const cursorPlayer = sliderContainer.querySelector('.js-cursor-player-animated');
-        if (!cursorPlayer) {
-          console.warn('Cursor player not found in slider');
-          return;
-        }
-        
-        const playerVideos = cursorPlayer.querySelectorAll('.player-animated-player');
-        console.log(`Found ${playerVideos.length} cursor player videos to initialize`);
-        console.log('Cursor player element:', cursorPlayer);
-        console.log('Player videos:', playerVideos);
-        
-        // Initialize cursor player positioning
-        const moovingElements = cursorPlayer.querySelectorAll('.mooving-elements');
-        const sliderRect = sliderContainer.getBoundingClientRect();
-        
-        // Set initial position to center
-        moovingElements.forEach(el => {
-          el.style.setProperty('--x', `${sliderRect.width / 2}px`);
-          el.style.setProperty('--y', `${sliderRect.height / 2}px`);
-        });
-        
-        // Track mouse movement to position cursor player
-        sliderContainer.addEventListener('mousemove', function(e) {
-          const rect = sliderContainer.getBoundingClientRect();
-          const playersWrapper = cursorPlayer.querySelector('.players-wrapper');
-          
-          // Calculate X position (centered on cursor)
-          const x = e.clientX - rect.left - (playersWrapper ? playersWrapper.offsetWidth / 2 : 0);
-          
-          // Calculate Y position (above cursor, like posterco.tv)
-          const y = -(playersWrapper ? playersWrapper.offsetHeight : 0);
-          
-          // Update CSS custom properties for cursor position
-          moovingElements.forEach(el => {
-            el.style.setProperty('--x', `${x}px`);
-            el.style.setProperty('--y', `${y}px`);
-          });
-        });
-        
-        console.log('✓ Cursor player re-initialized with', playerVideos.length, 'videos');
-        
-        // Manually add cursor player visibility handlers (build.min.js doesn't expose ms module)
-        // Replicate build.min.js behavior: add 'visible' class on wrapper mouseenter/mousemove
-        sliderContainer.addEventListener('mouseenter', function() {
-          cursorPlayer.classList.add('visible');
-          console.log('✓ Cursor player visible (mouseenter on wrapper)');
-        });
-        
-        sliderContainer.addEventListener('mousemove', function() {
-          if (!cursorPlayer.classList.contains('visible')) {
-            cursorPlayer.classList.add('visible');
-            console.log('✓ Cursor player visible (mousemove on wrapper)');
-          }
-        });
-        
-        sliderContainer.addEventListener('mouseleave', function() {
-          cursorPlayer.classList.remove('visible');
-          playerVideos.forEach(video => video.pause());
-          console.log('✓ Cursor player hidden (mouseleave from wrapper)');
-        });
-        
-        // Re-initialize video switching for dynamically loaded content
-        const listItems = sliderContainer.querySelectorAll('li');
-        const listLinks = sliderContainer.querySelectorAll('.js-change-video');
-        const mainVideos = document.querySelectorAll('.js-main-video');
-        const mainLink = document.getElementById('homepage-main-link');
-        const cursorText = document.getElementById('homepage-cursor-text');
-        const mobileLink = document.getElementById('homepage-mobile-link');
-        const counter = document.querySelector('.box--home__info__counter span');
-        
-        console.log(`Setting up video switching for ${listItems.length} items`);
-        
-        // Ensure all cursor player videos have src loaded once and add 'loaded' class
-        playerVideos.forEach((video) => {
-          if (!video.src && video.dataset.src) {
-            video.src = video.dataset.src;
-            video.load();
-          }
-          // Add 'loaded' class like posterco.tv
-          video.addEventListener('loadeddata', function() {
-            this.classList.add('loaded');
-            console.log('✓ Cursor player video loaded');
-          }, { once: true });
-        });
-        
-        listItems.forEach((item, index) => {
-          // Handle mouseenter on LI - set data-player-active and manually trigger video switching
-          item.addEventListener('mouseenter', function() {
-            sliderContainer.setAttribute('data-player-active', index);
-            
-            // Manually switch active video (since build.min.js observer isn't working for dynamic content)
-            playerVideos.forEach((video, videoIndex) => {
-              if (videoIndex === index) {
-                video.currentTime = 0;
-                video.play().catch(err => console.log('Play prevented:', err));
-                video.classList.add('active');
-              } else {
-                video.pause();
-                video.classList.remove('active');
-              }
+
+            // Re-initialize cursor text animations for dynamically loaded projects
+            const cursorTextElements = projectsListing.querySelectorAll(
+              '.js-cursor-text-animated'
+            );
+            console.log(
+              `Found ${cursorTextElements.length} cursor text elements to re-initialize`
+            );
+
+            cursorTextElements.forEach(cursorEl => {
+              const wrapper = cursorEl.closest('.js-has-cursor-text');
+              if (!wrapper) return;
+
+              // Add mouseenter/mouseleave to show/hide cursor text (matching build.min.js lines 24799-24804)
+              wrapper.addEventListener('mouseenter', function () {
+                cursorEl.classList.add('visible');
+                console.log('✓ Cursor text visible');
+              });
+
+              wrapper.addEventListener('mouseleave', function () {
+                cursorEl.classList.remove('visible');
+                console.log('✓ Cursor text hidden');
+              });
+
+              // Track mouse movement to position cursor text
+              wrapper.addEventListener('mousemove', function (e) {
+                const rect = cursorEl.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                // Update CSS custom properties for cursor position
+                const moovingElements =
+                  cursorEl.querySelectorAll('.mooving-elements');
+                moovingElements.forEach(el => {
+                  el.style.setProperty('--x', `${x}px`);
+                  el.style.setProperty('--y', `${y}px`);
+                });
+              });
             });
-            
-            console.log(`✓ Set data-player-active to ${index} and switched to video ${index + 1}`);
+
+            console.log('✓ Hover effects and cursor text re-initialized');
+          }
+        },
+        { once: true }
+      );
+
+      // Re-initialize cursor player for homepage slider after dynamic content loads
+      window.addEventListener(
+        'slider-rendered',
+        function () {
+          console.log(
+            '🔄 Re-initializing cursor player for homepage slider...'
+          );
+
+          const sliderContainer = document.querySelector(
+            '.list--home.js-has-cursor-player'
+          );
+          if (!sliderContainer) {
+            console.warn('Slider container not found');
+            return;
+          }
+
+          const cursorPlayer = sliderContainer.querySelector(
+            '.js-cursor-player-animated'
+          );
+          if (!cursorPlayer) {
+            console.warn('Cursor player not found in slider');
+            return;
+          }
+
+          const playerVideos = cursorPlayer.querySelectorAll(
+            '.player-animated-player'
+          );
+          console.log(
+            `Found ${playerVideos.length} cursor player videos to initialize`
+          );
+          console.log('Cursor player element:', cursorPlayer);
+          console.log('Player videos:', playerVideos);
+
+          // Initialize cursor player positioning
+          const moovingElements =
+            cursorPlayer.querySelectorAll('.mooving-elements');
+          const sliderRect = sliderContainer.getBoundingClientRect();
+
+          // Set initial position to center
+          moovingElements.forEach(el => {
+            el.style.setProperty('--x', `${sliderRect.width / 2}px`);
+            el.style.setProperty('--y', `${sliderRect.height / 2}px`);
           });
-          
-          // Handle click on link - switch video
-          const link = item.querySelector('.js-change-video');
-          if (link) {
-            link.addEventListener('click', function(e) {
-              e.preventDefault();
-              e.stopPropagation();
-              
-              // Don't do anything if already active
-              if (item.classList.contains('is-active')) return;
-              
-              console.log(`Switching to video ${index + 1}`);
-              
-              // Update active state
-              sliderContainer.querySelectorAll('li').forEach(li => li.classList.remove('is-active'));
-              item.classList.add('is-active');
-              
-              // Update counter
-              if (counter) counter.textContent = index + 1;
-              
-              // Update links
-              const itemTitle = this.querySelector('h2').textContent;
-              if (mainLink) mainLink.href = this.href;
-              if (mobileLink) mobileLink.href = this.href;
-              if (cursorText) cursorText.textContent = `open ${itemTitle}`;
-              if (mainLink) mainLink.setAttribute('data-cursor-text', `Open ${itemTitle}`);
-              
-              // Reset timeline
-              const timeline = document.querySelector('.box--home__timeline > span');
-              if (timeline) timeline.style.width = '0';
-              
-              // Switch videos - remove visible from all, add to selected
-              mainVideos.forEach((video, videoIndex) => {
+
+          // Track mouse movement to position cursor player
+          sliderContainer.addEventListener('mousemove', function (e) {
+            const rect = sliderContainer.getBoundingClientRect();
+            const playersWrapper =
+              cursorPlayer.querySelector('.players-wrapper');
+
+            // Calculate X position (centered on cursor)
+            const x =
+              e.clientX -
+              rect.left -
+              (playersWrapper ? playersWrapper.offsetWidth / 2 : 0);
+
+            // Calculate Y position (above cursor, like posterco.tv)
+            const y = -(playersWrapper ? playersWrapper.offsetHeight : 0);
+
+            // Update CSS custom properties for cursor position
+            moovingElements.forEach(el => {
+              el.style.setProperty('--x', `${x}px`);
+              el.style.setProperty('--y', `${y}px`);
+            });
+          });
+
+          console.log(
+            '✓ Cursor player re-initialized with',
+            playerVideos.length,
+            'videos'
+          );
+
+          // Manually add cursor player visibility handlers (build.min.js doesn't expose ms module)
+          // Replicate build.min.js behavior: add 'visible' class on wrapper mouseenter/mousemove
+          sliderContainer.addEventListener('mouseenter', function () {
+            cursorPlayer.classList.add('visible');
+            console.log('✓ Cursor player visible (mouseenter on wrapper)');
+          });
+
+          sliderContainer.addEventListener('mousemove', function () {
+            if (!cursorPlayer.classList.contains('visible')) {
+              cursorPlayer.classList.add('visible');
+              console.log('✓ Cursor player visible (mousemove on wrapper)');
+            }
+          });
+
+          sliderContainer.addEventListener('mouseleave', function () {
+            cursorPlayer.classList.remove('visible');
+            playerVideos.forEach(video => video.pause());
+            console.log('✓ Cursor player hidden (mouseleave from wrapper)');
+          });
+
+          // Re-initialize video switching for dynamically loaded content
+          const listItems = sliderContainer.querySelectorAll('li');
+          const listLinks =
+            sliderContainer.querySelectorAll('.js-change-video');
+          const mainVideos = document.querySelectorAll('.js-main-video');
+          const mainLink = document.getElementById('homepage-main-link');
+          const cursorText = document.getElementById('homepage-cursor-text');
+          const mobileLink = document.getElementById('homepage-mobile-link');
+          const counter = document.querySelector(
+            '.box--home__info__counter span'
+          );
+
+          console.log(
+            `Setting up video switching for ${listItems.length} items`
+          );
+
+          // Ensure all cursor player videos have src loaded once and add 'loaded' class
+          playerVideos.forEach(video => {
+            if (!video.src && video.dataset.src) {
+              video.src = video.dataset.src;
+              video.load();
+            }
+            // Add 'loaded' class like posterco.tv
+            video.addEventListener(
+              'loadeddata',
+              function () {
+                this.classList.add('loaded');
+                console.log('✓ Cursor player video loaded');
+              },
+              { once: true }
+            );
+          });
+
+          listItems.forEach((item, index) => {
+            // Handle mouseenter on LI - set data-player-active and manually trigger video switching
+            item.addEventListener('mouseenter', function () {
+              sliderContainer.setAttribute('data-player-active', index);
+
+              // Manually switch active video (since build.min.js observer isn't working for dynamic content)
+              playerVideos.forEach((video, videoIndex) => {
                 if (videoIndex === index) {
                   video.currentTime = 0;
-                  video.classList.add('visible', 'loaded');
-                  video.play().catch(err => console.log('Play prevented:', err));
+                  video
+                    .play()
+                    .catch(err => console.log('Play prevented:', err));
+                  video.classList.add('active');
                 } else {
-                  video.classList.remove('visible');
                   video.pause();
+                  video.classList.remove('active');
                 }
               });
-              
-              // Add timeline animation class
-              if (timeline) timeline.classList.add('is-animated');
-              
-              console.log('✓ Video switched');
+
+              console.log(
+                `✓ Set data-player-active to ${index} and switched to video ${index + 1}`
+              );
             });
-          }
-        });
-        
-        // Handle timeline progress during video playback
-        mainVideos.forEach((video, index) => {
-          video.addEventListener('timeupdate', function() {
-            const timeline = document.querySelector('.box--home__timeline > span');
-            if (timeline && this.classList.contains('visible')) {
-              let progress = (100 * this.currentTime) / this.duration;
-              if (isNaN(progress)) progress = 0;
-              timeline.style.width = progress.toFixed(2) + '%';
+
+            // Handle click on link - switch video
+            const link = item.querySelector('.js-change-video');
+            if (link) {
+              link.addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // Don't do anything if already active
+                if (item.classList.contains('is-active')) return;
+
+                console.log(`Switching to video ${index + 1}`);
+
+                // Update active state
+                sliderContainer
+                  .querySelectorAll('li')
+                  .forEach(li => li.classList.remove('is-active'));
+                item.classList.add('is-active');
+
+                // Update counter
+                if (counter) counter.textContent = index + 1;
+
+                // Update links
+                const itemTitle = this.querySelector('h2').textContent;
+                if (mainLink) mainLink.href = this.href;
+                if (mobileLink) mobileLink.href = this.href;
+                if (cursorText) cursorText.textContent = `open ${itemTitle}`;
+                if (mainLink)
+                  mainLink.setAttribute(
+                    'data-cursor-text',
+                    `Open ${itemTitle}`
+                  );
+
+                // Reset timeline
+                const timeline = document.querySelector(
+                  '.box--home__timeline > span'
+                );
+                if (timeline) timeline.style.width = '0';
+
+                // Switch videos - remove visible from all, add to selected
+                mainVideos.forEach((video, videoIndex) => {
+                  if (videoIndex === index) {
+                    video.currentTime = 0;
+                    video.classList.add('visible', 'loaded');
+                    video
+                      .play()
+                      .catch(err => console.log('Play prevented:', err));
+                  } else {
+                    video.classList.remove('visible');
+                    video.pause();
+                  }
+                });
+
+                // Add timeline animation class
+                if (timeline) timeline.classList.add('is-animated');
+
+                console.log('✓ Video switched');
+              });
             }
           });
-          
-          // Handle video ended - auto-advance to next video (like build.min.js line 24016-24020)
-          video.addEventListener('ended', function() {
-            const timeline = document.querySelector('.box--home__timeline > span');
+
+          // Handle timeline progress during video playback
+          mainVideos.forEach((video, index) => {
+            video.addEventListener('timeupdate', function () {
+              const timeline = document.querySelector(
+                '.box--home__timeline > span'
+              );
+              if (timeline && this.classList.contains('visible')) {
+                let progress = (100 * this.currentTime) / this.duration;
+                if (isNaN(progress)) progress = 0;
+                timeline.style.width = progress.toFixed(2) + '%';
+              }
+            });
+
+            // Handle video ended - auto-advance to next video (like build.min.js line 24016-24020)
+            video.addEventListener('ended', function () {
+              const timeline = document.querySelector(
+                '.box--home__timeline > span'
+              );
+              if (timeline) timeline.classList.remove('is-animated');
+
+              // Calculate next video index
+              let nextIndex = index + 1;
+              if (nextIndex > mainVideos.length - 1) nextIndex = 0;
+
+              // Update active state
+              sliderContainer
+                .querySelectorAll('li')
+                .forEach(li => li.classList.remove('is-active'));
+              const nextItem = listItems[nextIndex];
+              if (nextItem) nextItem.classList.add('is-active');
+
+              // Update counter
+              if (counter) counter.textContent = nextIndex + 1;
+
+              // Update links
+              const nextLink = nextItem?.querySelector('.js-change-video');
+              if (nextLink) {
+                const itemTitle =
+                  nextLink.querySelector('h2')?.textContent || '';
+                if (mainLink) mainLink.href = nextLink.href;
+                if (mobileLink) mobileLink.href = nextLink.href;
+                if (cursorText) cursorText.textContent = `open ${itemTitle}`;
+                if (mainLink)
+                  mainLink.setAttribute(
+                    'data-cursor-text',
+                    `Open ${itemTitle}`
+                  );
+              }
+
+              // Reset timeline
+              if (timeline) timeline.style.width = '0';
+
+              // Switch videos
+              mainVideos.forEach((v, vIndex) => {
+                if (vIndex === nextIndex) {
+                  v.currentTime = 0;
+                  v.classList.add('visible', 'loaded');
+                  v.play().catch(err => console.log('Play prevented:', err));
+                } else {
+                  v.classList.remove('visible');
+                  v.pause();
+                }
+              });
+
+              // Add timeline animation class
+              if (timeline) timeline.classList.add('is-animated');
+
+              // Update cursor player data-player-active
+              sliderContainer.setAttribute('data-player-active', nextIndex);
+
+              console.log(
+                `✓ Video ended - auto-advanced to video ${nextIndex + 1}`
+              );
+            });
+          });
+
+          // Handle mobile arrows prev/next (like build.min.js line 23928-23930)
+          // Now also handles desktop slider arrows with same classes
+          const mobileArrowPrev = document.querySelectorAll('.arrow-prev');
+          const mobileArrowNext = document.querySelectorAll('.arrow-next');
+
+          console.log('Navigation arrows found:', {
+            prev: mobileArrowPrev.length,
+            next: mobileArrowNext.length
+          });
+
+          // Track current video index like build.min.js does (line 23931)
+          let currentlyPlaying = 0;
+          const minPlaying = 0;
+          const maxPlaying = mainVideos.length - 1;
+
+          function switchToVideo(targetIndex) {
+            // Update currentlyPlaying tracker
+            currentlyPlaying = targetIndex;
+            console.log(
+              `switchToVideo called with targetIndex: ${targetIndex}, total videos: ${mainVideos.length}`
+            );
+            // Clamp index to valid range
+            if (targetIndex < 0) targetIndex = mainVideos.length - 1;
+            if (targetIndex > mainVideos.length - 1) targetIndex = 0;
+
+            const timeline = document.querySelector(
+              '.box--home__timeline > span'
+            );
             if (timeline) timeline.classList.remove('is-animated');
-            
-            // Calculate next video index
-            let nextIndex = index + 1;
-            if (nextIndex > mainVideos.length - 1) nextIndex = 0;
-            
+
             // Update active state
-            sliderContainer.querySelectorAll('li').forEach(li => li.classList.remove('is-active'));
-            const nextItem = listItems[nextIndex];
-            if (nextItem) nextItem.classList.add('is-active');
-            
-            // Update counter
-            if (counter) counter.textContent = nextIndex + 1;
-            
-            // Update links
-            const nextLink = nextItem?.querySelector('.js-change-video');
-            if (nextLink) {
-              const itemTitle = nextLink.querySelector('h2')?.textContent || '';
-              if (mainLink) mainLink.href = nextLink.href;
-              if (mobileLink) mobileLink.href = nextLink.href;
-              if (cursorText) cursorText.textContent = `open ${itemTitle}`;
-              if (mainLink) mainLink.setAttribute('data-cursor-text', `Open ${itemTitle}`);
+            sliderContainer
+              .querySelectorAll('li')
+              .forEach(li => li.classList.remove('is-active'));
+            const targetItem = listItems[targetIndex];
+            console.log('targetItem:', targetItem, 'targetIndex:', targetIndex);
+            if (targetItem) {
+              targetItem.classList.add('is-active');
+              console.log(
+                'Added is-active to:',
+                targetItem,
+                'classList:',
+                targetItem.classList
+              );
             }
-            
+
+            // Update counter
+            if (counter) counter.textContent = targetIndex + 1;
+
+            // Update links
+            const targetLink = targetItem?.querySelector('.js-change-video');
+            if (targetLink) {
+              const itemTitle =
+                targetLink.querySelector('h2')?.textContent || '';
+              const linkHref = targetLink.href;
+              if (mainLink) {
+                mainLink.href = linkHref;
+                mainLink.setAttribute(
+                  'onclick',
+                  `window.location.replace('${linkHref}'); return false;`
+                );
+                mainLink.setAttribute('data-cursor-text', `Open ${itemTitle}`);
+              }
+              if (mobileLink) {
+                mobileLink.href = linkHref;
+                mobileLink.setAttribute(
+                  'onclick',
+                  `window.location.replace('${linkHref}'); return false;`
+                );
+              }
+              if (cursorText) cursorText.textContent = `open ${itemTitle}`;
+            }
+
             // Reset timeline
             if (timeline) timeline.style.width = '0';
-            
+
             // Switch videos
             mainVideos.forEach((v, vIndex) => {
-              if (vIndex === nextIndex) {
+              if (vIndex === targetIndex) {
                 v.currentTime = 0;
                 v.classList.add('visible', 'loaded');
                 v.play().catch(err => console.log('Play prevented:', err));
@@ -1240,204 +1524,142 @@
                 v.pause();
               }
             });
-            
+
             // Add timeline animation class
             if (timeline) timeline.classList.add('is-animated');
-            
+
             // Update cursor player data-player-active
-            sliderContainer.setAttribute('data-player-active', nextIndex);
-            
-            console.log(`✓ Video ended - auto-advanced to video ${nextIndex + 1}`);
-          });
-        });
-        
-        // Handle mobile arrows prev/next (like build.min.js line 23928-23930)
-        // Now also handles desktop slider arrows with same classes
-        const mobileArrowPrev = document.querySelectorAll('.arrow-prev');
-        const mobileArrowNext = document.querySelectorAll('.arrow-next');
-        
-        console.log('Navigation arrows found:', { prev: mobileArrowPrev.length, next: mobileArrowNext.length });
-        
-        // Track current video index like build.min.js does (line 23931)
-        let currentlyPlaying = 0;
-        const minPlaying = 0;
-        const maxPlaying = mainVideos.length - 1;
-        
-        function switchToVideo(targetIndex) {
-          // Update currentlyPlaying tracker
-          currentlyPlaying = targetIndex;
-          console.log(`switchToVideo called with targetIndex: ${targetIndex}, total videos: ${mainVideos.length}`);
-          // Clamp index to valid range
-          if (targetIndex < 0) targetIndex = mainVideos.length - 1;
-          if (targetIndex > mainVideos.length - 1) targetIndex = 0;
-          
-          const timeline = document.querySelector('.box--home__timeline > span');
-          if (timeline) timeline.classList.remove('is-animated');
-          
-          // Update active state
-          sliderContainer.querySelectorAll('li').forEach(li => li.classList.remove('is-active'));
-          const targetItem = listItems[targetIndex];
-          console.log('targetItem:', targetItem, 'targetIndex:', targetIndex);
-          if (targetItem) {
-            targetItem.classList.add('is-active');
-            console.log('Added is-active to:', targetItem, 'classList:', targetItem.classList);
+            sliderContainer.setAttribute('data-player-active', targetIndex);
+
+            console.log(`✓ Switched to video ${targetIndex + 1}`);
           }
-          
-          // Update counter
-          if (counter) counter.textContent = targetIndex + 1;
-          
-          // Update links
-          const targetLink = targetItem?.querySelector('.js-change-video');
-          if (targetLink) {
-            const itemTitle = targetLink.querySelector('h2')?.textContent || '';
-            const linkHref = targetLink.href;
-            if (mainLink) {
-              mainLink.href = linkHref;
-              mainLink.setAttribute('onclick', `window.location.replace('${linkHref}'); return false;`);
-              mainLink.setAttribute('data-cursor-text', `Open ${itemTitle}`);
-            }
-            if (mobileLink) {
-              mobileLink.href = linkHref;
-              mobileLink.setAttribute('onclick', `window.location.replace('${linkHref}'); return false;`);
-            }
-            if (cursorText) cursorText.textContent = `open ${itemTitle}`;
-          }
-          
-          // Reset timeline
-          if (timeline) timeline.style.width = '0';
-          
-          // Switch videos
-          mainVideos.forEach((v, vIndex) => {
-            if (vIndex === targetIndex) {
-              v.currentTime = 0;
-              v.classList.add('visible', 'loaded');
-              v.play().catch(err => console.log('Play prevented:', err));
-            } else {
-              v.classList.remove('visible');
-              v.pause();
-            }
+
+          // onPrevClick - handle all prev arrows (mobile + desktop)
+          mobileArrowPrev.forEach(arrow => {
+            arrow.addEventListener('click', function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('← Prev arrow clicked');
+              currentlyPlaying--;
+              if (currentlyPlaying < minPlaying) currentlyPlaying = maxPlaying;
+              console.log(`currentlyPlaying: ${currentlyPlaying}`);
+              switchToVideo(currentlyPlaying);
+            });
           });
-          
-          // Add timeline animation class
-          if (timeline) timeline.classList.add('is-animated');
-          
-          // Update cursor player data-player-active
-          sliderContainer.setAttribute('data-player-active', targetIndex);
-          
-          console.log(`✓ Switched to video ${targetIndex + 1}`);
-        }
-        
-        // onPrevClick - handle all prev arrows (mobile + desktop)
-        mobileArrowPrev.forEach(arrow => {
-          arrow.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('← Prev arrow clicked');
-            currentlyPlaying--;
-            if (currentlyPlaying < minPlaying) currentlyPlaying = maxPlaying;
-            console.log(`currentlyPlaying: ${currentlyPlaying}`);
-            switchToVideo(currentlyPlaying);
+
+          // onNextClick - handle all next arrows (mobile + desktop)
+          mobileArrowNext.forEach(arrow => {
+            arrow.addEventListener('click', function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('→ Next arrow clicked');
+              currentlyPlaying++;
+              if (currentlyPlaying > maxPlaying) currentlyPlaying = minPlaying;
+              console.log(`currentlyPlaying: ${currentlyPlaying}`);
+              switchToVideo(currentlyPlaying);
+            });
           });
-        });
-        
-        // onNextClick - handle all next arrows (mobile + desktop)
-        mobileArrowNext.forEach(arrow => {
-          arrow.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log('→ Next arrow clicked');
-            currentlyPlaying++;
-            if (currentlyPlaying > maxPlaying) currentlyPlaying = minPlaying;
-            console.log(`currentlyPlaying: ${currentlyPlaying}`);
-            switchToVideo(currentlyPlaying);
-          });
-        });
-        
-        console.log('✓ Video switching, timeline, and arrows re-initialized');
-      }, { once: true });
+
+          console.log('✓ Video switching, timeline, and arrows re-initialized');
+        },
+        { once: true }
+      );
 
       // Category filtering - replicate build.min.js logic
-      window.addEventListener('projects-rendered', function() {
+      window.addEventListener('projects-rendered', function () {
         console.log('🔄 Initializing category filtering...');
-        
+
         const filterLinks = document.querySelectorAll('.js-filter-cat');
         const worksList = document.querySelector('.list--works');
         const header = document.querySelector('header.header');
 
-             const allWorks = worksList.querySelectorAll('.box--work');
+        const allWorks = worksList.querySelectorAll('.box--work');
 
-             console.log({allWorks});
+        console.log({ allWorks });
         if (!filterLinks.length || !worksList) {
           console.warn('Filter links or works list not found');
           return;
         }
-        
+
         // Store current filter state
         let currentFilter = '*';
-        
+
         // Add click handlers to filter links
         filterLinks.forEach(link => {
-          link.addEventListener('click', function(e) {
+          link.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
-            
+
             const selectedCategory = this.getAttribute('data-cat');
             console.log(`Filter clicked: ${selectedCategory}`);
-            
+
             // Update active state on filter links
             filterLinks.forEach(l => l.classList.remove('is-active'));
             this.classList.add('is-active');
-            
+
             // Store current filter
             currentFilter = selectedCategory;
-            
+
             // Get all work items
             const allWorks = worksList.querySelectorAll('.box--work');
-            console.log(`Filtering ${allWorks.length} projects by category: ${selectedCategory}`);
-            
+            console.log(
+              `Filtering ${allWorks.length} projects by category: ${selectedCategory}`
+            );
 
-            console.log({allWorks});
+            console.log({ allWorks });
             // Filter logic: show items matching filter or if filter is "*" (all)
             allWorks.forEach(work => {
               const workCategory = work.getAttribute('data-cat');
-              
-              
+
               // Case-insensitive comparison
-              const matches = selectedCategory === '*' || 
-                             (workCategory && workCategory.toLowerCase() === selectedCategory.toLowerCase());
-              
+              const matches =
+                selectedCategory === '*' ||
+                (workCategory &&
+                  workCategory.toLowerCase() ===
+                    selectedCategory.toLowerCase());
+
               if (matches) {
                 work.classList.remove('hidden');
-                console.log(`✓ Showing: ${work.querySelector('h2')?.textContent || 'Unknown'} (${workCategory})`);
+                console.log(
+                  `✓ Showing: ${work.querySelector('h2')?.textContent || 'Unknown'} (${workCategory})`
+                );
               } else {
                 work.classList.add('hidden');
-                console.log(`✗ Hiding: ${work.querySelector('h2')?.textContent || 'Unknown'} (${workCategory})`);
+                console.log(
+                  `✗ Hiding: ${work.querySelector('h2')?.textContent || 'Unknown'} (${workCategory})`
+                );
               }
             });
-            
+
             // Force header to stay in "on-works-section" state when filtering is active
             // This ensures projects-nav remains visible even with fewer projects
             if (header) {
               if (selectedCategory === '*') {
                 // "All" filter - let normal scroll behavior control visibility
                 header.classList.remove('filter-active');
-                console.log('✓ Removed filter-active class - normal scroll behavior');
+                console.log(
+                  '✓ Removed filter-active class - normal scroll behavior'
+                );
               } else {
                 // Specific filter active - force projects-nav to stay visible
                 header.classList.add('on-works-section', 'filter-active');
-                console.log('✓ Added filter-active class - projects-nav forced visible');
+                console.log(
+                  '✓ Added filter-active class - projects-nav forced visible'
+                );
               }
             }
-            
-            console.log(`✓ Filtering complete - showing projects with category: ${selectedCategory}`);
+
+            console.log(
+              `✓ Filtering complete - showing projects with category: ${selectedCategory}`
+            );
           });
         });
-        
+
         console.log('✓ Category filtering initialized');
-        
+
         // Override scroll behavior to maintain projects-nav visibility during filtering
         let originalScrollHandler = null;
-        
+
         // Store reference to prevent scroll from hiding projects-nav when filter is active
         function preventScrollHide() {
           const header = document.querySelector('header.header');
@@ -1449,13 +1671,12 @@
             }
           }
         }
-        
+
         // Add scroll listener to maintain filter visibility
         window.addEventListener('scroll', preventScrollHide);
-        
+
         console.log('✓ Scroll override for filtering initialized');
       });
-
     </script>
   </body>
 </html>

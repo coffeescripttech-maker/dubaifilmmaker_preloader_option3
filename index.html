@@ -76,14 +76,8 @@
     <meta name="twitter:title" content="Poster â€“ Homepage" />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <meta
-      name="description"
-      content="Post-Production company based in the heart of Paris, dedicated to audiovisual production, advertisement, digital content, music video feature films & documentaries."
-    />
-    <meta
-      property="og:description"
-      content="Post-Production company based in the heart of Paris, dedicated to audiovisual production, advertisement, digital content, music video feature films & documentaries."
-    />
+    <meta name="description" content="" />
+    <meta property="og:description" content="" />
 
     <title>DubaiFilmMaker - Homepage</title>
 
@@ -1673,60 +1667,80 @@
         console.log('✓ Video switching, timeline, and arrows re-initialized');
 
         // Apply arrow visibility based on config (arrows are dynamically loaded)
-        var arrowEls = document.querySelectorAll('.arrow-prev, .arrow-next, .slider-nav-arrow, .box--home__buttons-mobile .arrows');
+        var arrowEls = document.querySelectorAll(
+          '.arrow-prev, .arrow-next, .slider-nav-arrow, .box--home__buttons-mobile .arrows'
+        );
         if (window.__swipeNavigationEnabled) {
-          arrowEls.forEach(function(el) { el.style.setProperty('display', 'none', 'important'); });
+          arrowEls.forEach(function (el) {
+            el.style.setProperty('display', 'none', 'important');
+          });
           console.log('✓ Arrows hidden (swipe mode)');
         } else {
-          arrowEls.forEach(function(el) { el.style.removeProperty('display'); });
+          arrowEls.forEach(function (el) {
+            el.style.removeProperty('display');
+          });
           console.log('✓ Arrows visible (arrow mode)');
         }
 
         // Touch swipe navigation (only when config says so)
         if (window.__swipeNavigationEnabled) {
-          var swipeTarget = document.querySelector('#homepage-main-video-wrapper, .box--home__wrapper');
+          var swipeTarget = document.querySelector(
+            '#homepage-main-video-wrapper, .box--home__wrapper'
+          );
           if (swipeTarget) {
             var touchStartX = 0;
             var touchStartY = 0;
             var swipeHandled = false;
 
-            swipeTarget.addEventListener('touchstart', function (e) {
-              var touch = e.touches[0];
-              touchStartX = touch.clientX;
-              touchStartY = touch.clientY;
-              swipeHandled = false;
-            }, { passive: true });
+            swipeTarget.addEventListener(
+              'touchstart',
+              function (e) {
+                var touch = e.touches[0];
+                touchStartX = touch.clientX;
+                touchStartY = touch.clientY;
+                swipeHandled = false;
+              },
+              { passive: true }
+            );
 
-            swipeTarget.addEventListener('touchend', function (e) {
-              if (swipeHandled) return;
-              var touch = e.changedTouches[0];
-              var diffX = touch.clientX - touchStartX;
-              var diffY = touch.clientY - touchStartY;
+            swipeTarget.addEventListener(
+              'touchend',
+              function (e) {
+                if (swipeHandled) return;
+                var touch = e.changedTouches[0];
+                var diffX = touch.clientX - touchStartX;
+                var diffY = touch.clientY - touchStartY;
 
-              // Only trigger if horizontal swipe is stronger than vertical scroll
-              if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
-                swipeHandled = true;
-                if (diffX < 0) {
-                  // Swipe left → next
-                  console.log('👆 Swipe left → next');
-                  currentlyPlaying++;
-                  if (currentlyPlaying > maxPlaying) currentlyPlaying = minPlaying;
-                  switchToVideo(currentlyPlaying);
-                } else {
-                  // Swipe right → prev
-                  console.log('👆 Swipe right → prev');
-                  currentlyPlaying--;
-                  if (currentlyPlaying < minPlaying) currentlyPlaying = maxPlaying;
-                  switchToVideo(currentlyPlaying);
+                // Only trigger if horizontal swipe is stronger than vertical scroll
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
+                  swipeHandled = true;
+                  if (diffX < 0) {
+                    // Swipe left → next
+                    console.log('👆 Swipe left → next');
+                    currentlyPlaying++;
+                    if (currentlyPlaying > maxPlaying)
+                      currentlyPlaying = minPlaying;
+                    switchToVideo(currentlyPlaying);
+                  } else {
+                    // Swipe right → prev
+                    console.log('👆 Swipe right → prev');
+                    currentlyPlaying--;
+                    if (currentlyPlaying < minPlaying)
+                      currentlyPlaying = maxPlaying;
+                    switchToVideo(currentlyPlaying);
+                  }
                 }
-              }
-            }, { passive: true });
+              },
+              { passive: true }
+            );
             console.log('✓ Touch swipe initialized on video wrapper');
           } else {
             console.warn('⚠ Touch swipe target not found');
           }
         } else {
-          console.log('ℹ️ Swipe navigation disabled by config — arrows are visible');
+          console.log(
+            'ℹ️ Swipe navigation disabled by config — arrows are visible'
+          );
         }
       }); // Removed { once: true } so this runs every time homepage is loaded
 
