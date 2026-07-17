@@ -1256,8 +1256,8 @@
         var obs = new MutationObserver(function () {
           var svg = el.querySelector('svg');
           if (!svg) return;
-          if (svg.getAttribute('preserveAspectRatio') !== 'xMidYMid slice') {
-            svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+          if (svg.getAttribute('preserveAspectRatio') !== 'xMidYMid meet') {
+            svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
           }
           if (scale !== 1) {
             el.style.transform = 'scale(' + scale + ')';
